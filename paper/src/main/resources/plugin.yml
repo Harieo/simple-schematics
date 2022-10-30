@@ -1,0 +1,5 @@
+main: net.harieo.schematics.paper.SchematicsPlugin
+name: SimpleSchematics
+version: 1.0.0
+author: Harieo
+api-version: 1.13 # Minimum 1.13 support

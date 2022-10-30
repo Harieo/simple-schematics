@@ -4,13 +4,38 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A record of a 3-dimensional coordinate.
- *
- * @param x the x-axis position
- * @param y the y-axis position
- * @param z the z-axis position
+ * A 3-dimensional coordinate.
  */
-public record Coordinate(double x, double y, double z) {
+public class Coordinate {
+
+    private final double x;
+    private final double y;
+    private final double z;
+
+    /**
+     * A 3-dimensional coordinate.
+     *
+     * @param x position on the x-axis
+     * @param y position on the y-axis
+     * @param z position on the z-axis
+     */
+    public Coordinate(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
 
     /**
      * Applies a {@link Vector} to this coordinate by addition.
