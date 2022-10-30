@@ -25,6 +25,17 @@ public class Coordinate {
         this.z = z;
     }
 
+    /**
+     * Clones an existing {@link Coordinate} into this object.
+     *
+     * @param coordinate the coordinate to clone values from
+     */
+    public Coordinate(@NotNull Coordinate coordinate) {
+        this.x = coordinate.x;
+        this.y = coordinate.y;
+        this.z = coordinate.z;
+    }
+
     public double getX() {
         return x;
     }

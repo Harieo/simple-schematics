@@ -22,7 +22,7 @@ public class BukkitCoordinate extends Coordinate {
     }
 
     public BukkitCoordinate(@NotNull World world, @NotNull Coordinate coordinate) {
-        super(coordinate.getX(), coordinate.getY(), coordinate.getZ());
+        super(coordinate);
         this.world = world;
     }
 
