@@ -1,11 +1,13 @@
 package net.harieo.schematics.schematic;
 
+import com.google.common.collect.ImmutableList;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +62,8 @@ public class Schematic {
      *
      * @return the list of modifications to create this schematic
      */
-    public @NotNull List<RelativeModification> getModifications() {
-        return modifications;
+    public @NotNull @Unmodifiable List<RelativeModification> getModifications() {
+        return ImmutableList.copyOf(modifications);
     }
 
     /**
@@ -94,6 +96,15 @@ public class Schematic {
      */
     public void addAbsoluteModification(@NotNull Modification modification) {
         modifications.add(new RelativeModification(modification, new Vector(0, 0, 0)));
+    }
+
+    /**
+     * Removes a {@link RelativeModification} from the list of modifications.
+     *
+     * @param modification the object to remove from the list
+     */
+    public void removeModification(@NotNull RelativeModification modification) {
+        modifications.remove(modification);
     }
 
     /**
