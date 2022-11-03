@@ -1,7 +1,8 @@
 package net.harieo.schematics.paper.modification.impl;
 
-import net.harieo.schematics.exception.ModificationException;
-import net.harieo.schematics.modification.Modification;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.position.Coordinate;
@@ -25,7 +26,7 @@ public class BlockModification extends BukkitModification {
      * @throws IllegalArgumentException if the provided material returns {@code Material#isBlock() == false}
      */
     public BlockModification(@NotNull World world, @NotNull Material blockMaterial) {
-        super(world);
+        super("block-edit", world);
         if (!blockMaterial.isBlock()) {
             throw new IllegalArgumentException("Not a block material: " + blockMaterial.name());
         }
@@ -45,6 +46,11 @@ public class BlockModification extends BukkitModification {
 
     public Block toBlock(@NotNull BukkitCoordinate bukkitCoordinate) {
         return bukkitCoordinate.toLocation().getBlock();
+    }
+
+    @Override
+    protected void addSerializationData(@NotNull JsonObject serializedObject) {
+        serializedObject.addProperty("material", blockMaterial.name());
     }
 
 }

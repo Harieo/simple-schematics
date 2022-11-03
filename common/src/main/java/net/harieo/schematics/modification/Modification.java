@@ -1,5 +1,7 @@
 package net.harieo.schematics.modification;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.harieo.schematics.exception.ModificationException;
 import net.harieo.schematics.position.Coordinate;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +9,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A modification which can be applied at a given {@link Coordinate}
  */
-public interface Modification {
+public abstract class Modification {
+
+    private final String type;
+
+    public Modification(@NotNull String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the string which identifies this type of modification
+     */
+    public String getType() {
+        return type;
+    }
 
     /**
      * Whether this modification can be applied at the given {@link Coordinate}.
@@ -16,7 +31,7 @@ public interface Modification {
      * @return whether this modification can be applied at the given {@link Coordinate}
      * @implNote this method should reflect the result of {@link #apply(Coordinate)}
      */
-    boolean isAvailable(@NotNull Coordinate coordinate);
+    public abstract boolean isAvailable(@NotNull Coordinate coordinate);
 
     /**
      * Applies this modification at the given {@link Coordinate} on the assumption that {@link #isAvailable(Coordinate)} was
@@ -26,6 +41,25 @@ public interface Modification {
      * @throws ModificationException if the modification is not available to be applied at the given {@link Coordinate}
      * @implNote if {@link #isAvailable(Coordinate)} returns {@code true} then there should be no {@link ModificationException} thrown by this method
      */
-    void apply(@NotNull Coordinate coordinate) throws ModificationException;
+    public abstract void apply(@NotNull Coordinate coordinate) throws ModificationException;
+
+    /**
+     * Serializes this modification a JSON format identified the {@link #type} as a property.
+     *
+     * @return the serialized JSON
+     */
+    public JsonObject serializeToJson() {
+        JsonObject serializedObject = new JsonObject();
+        serializedObject.addProperty("type", type);
+        addSerializationData(serializedObject);
+        return serializedObject;
+    }
+
+    /**
+     * Adds the data from the implementing class to the serialized JSON constructed in {@link #serializeToJson()}.
+     *
+     * @param serializedObject the serialized object to add data to
+     */
+    protected abstract void addSerializationData(@NotNull JsonObject serializedObject);
 
 }

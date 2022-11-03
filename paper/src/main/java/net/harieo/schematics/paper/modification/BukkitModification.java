@@ -11,16 +11,18 @@ import org.jetbrains.annotations.NotNull;
  * A platform-specific {@link Modification} which adds {@link World} to allow a default {@link Coordinate} to be converted
  * into a {@link BukkitCoordinate}, so the {@link Modification} can be used within Bukkit/Spigot implementations.
  */
-public abstract class BukkitModification implements Modification {
+public abstract class BukkitModification extends Modification {
 
     private final World world;
 
     /**
      * A {@link Modification} which takes place in the given {@link World}.
      *
+     * @param type the identifier for the implementing modification
      * @param world the Bukkit world in which this modification takes place
      */
-    public BukkitModification(@NotNull World world) {
+    public BukkitModification(@NotNull String type, @NotNull World world) {
+        super(type);
         this.world = world;
     }
 

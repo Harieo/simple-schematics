@@ -3,7 +3,19 @@ package net.harieo.schematics.position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public record Vector(double x, double y, double z) {
+public class Vector extends Coordinate {
+
+    /**
+     * A 3-dimensional vector which, in-effect, is a {@link Coordinate} but has slightly different functions to perform
+     * as an offset from a static {@link Coordinate}.
+     *
+     * @param x the x-axis difference
+     * @param y the y-axis difference
+     * @param z the z-axis difference
+     */
+    public Vector(double x, double y, double z) {
+        super(x, y, z);
+    }
 
     /**
      * Adds the provided vector to this vector.

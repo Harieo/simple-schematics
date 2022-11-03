@@ -1,5 +1,6 @@
 package net.harieo.schematics.paper.modification.impl;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import org.bukkit.Location;
@@ -21,7 +22,7 @@ public class EntitySpawnModification extends BukkitModification {
      * @param entityType the type of entity to spawn
      */
     public EntitySpawnModification(@NotNull World world, @NotNull EntityType entityType) {
-        super(world);
+        super("entity-spawn", world);
         this.entityType = entityType;
     }
 
@@ -33,6 +34,12 @@ public class EntitySpawnModification extends BukkitModification {
     @Override
     public void apply(@NotNull BukkitCoordinate bukkitCoordinate) {
         Location location = bukkitCoordinate.toLocation();
+        getWorld().spawnEntity(location, entityType);
+    }
+
+    @Override
+    protected void addSerializationData(@NotNull JsonObject serializedObject) {
+        serializedObject.addProperty("entity-type", entityType.name());
     }
 
 }

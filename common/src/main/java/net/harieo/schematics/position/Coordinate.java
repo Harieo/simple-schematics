@@ -1,5 +1,6 @@
 package net.harieo.schematics.position;
 
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Coordinate {
 
-    private final double x;
-    private final double y;
-    private final double z;
+    protected final double x;
+    protected final double y;
+    protected final double z;
 
     /**
      * A 3-dimensional coordinate.
@@ -56,7 +57,7 @@ public class Coordinate {
      */
     @Contract(pure = true)
     public Coordinate applyVector(@NotNull Vector vector) {
-        return new Coordinate(this.x + vector.x(), this.y + vector.y(), this.z + vector.z());
+        return new Coordinate(this.x + vector.getX(), this.y + vector.getY(), this.z + vector.getZ());
     }
 
     /**
@@ -67,6 +68,33 @@ public class Coordinate {
     @Contract(pure = true)
     public Vector toVector() {
         return new Vector(x, y, z);
+    }
+
+    /**
+     * Serializes these coordinates as a JSON.
+     *
+     * @return the JSON coordinates
+     */
+    public @NotNull JsonObject serializeToJson() {
+        JsonObject serializedObject = new JsonObject();
+        serializedObject.addProperty("x", x);
+        serializedObject.addProperty("y", y);
+        serializedObject.addProperty("z", z);
+        return serializedObject;
+    }
+
+    /**
+     * Deserializes a serialized coordinate.
+     *
+     * @param serializedCoordinate the serialized coordinate
+     * @return the deserialized coordinate
+     * @apiNote If the expected serialized coordinate is a {@link Vector}, then simply call {@link #toVector()} to convert types.
+     */
+    public static Coordinate deserialize(@NotNull JsonObject serializedCoordinate) {
+        double x = serializedCoordinate.get("x").getAsDouble();
+        double y = serializedCoordinate.get("y").getAsDouble();
+        double z = serializedCoordinate.get("z").getAsDouble();
+        return new Coordinate(x, y, z);
     }
 
 }
