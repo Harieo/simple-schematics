@@ -16,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BlockModification extends BukkitModification {
 
+    public static final String MATERIAL_KEY = "material";
+
     private final Material blockMaterial;
 
     /**
@@ -49,8 +51,8 @@ public class BlockModification extends BukkitModification {
     }
 
     @Override
-    protected void addSerializationData(@NotNull JsonObject serializedObject) {
-        serializedObject.addProperty("material", blockMaterial.name());
+    protected void addExtraSerializationData(@NotNull JsonObject serializedObject) {
+        serializedObject.addProperty(MATERIAL_KEY, blockMaterial.name());
     }
 
 }

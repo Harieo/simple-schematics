@@ -1,5 +1,6 @@
 package net.harieo.schematics.paper.modification;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.exception.ModificationException;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
@@ -68,5 +69,18 @@ public abstract class BukkitModification extends Modification {
     protected BukkitCoordinate toBukkit(@NotNull Coordinate coordinate) {
         return new BukkitCoordinate(world, coordinate);
     }
+
+    @Override
+    protected void addSerializationData(@NotNull JsonObject serializedObject) {
+        serializedObject.addProperty("world", world.getName());
+        addExtraSerializationData(serializedObject);
+    }
+
+    /**
+     * Adds serialization data from the implementing class.
+     *
+     * @param serializedObject the serialized JSON object
+     */
+    protected abstract void addExtraSerializationData(@NotNull JsonObject serializedObject);
 
 }

@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EntitySpawnModification extends BukkitModification {
 
+    public static final String ENTITY_TYPE_KEY = "entity-type";
+
     private final EntityType entityType;
 
     /**
@@ -38,8 +40,8 @@ public class EntitySpawnModification extends BukkitModification {
     }
 
     @Override
-    protected void addSerializationData(@NotNull JsonObject serializedObject) {
-        serializedObject.addProperty("entity-type", entityType.name());
+    protected void addExtraSerializationData(@NotNull JsonObject serializedObject) {
+        serializedObject.addProperty(ENTITY_TYPE_KEY, entityType.name());
     }
 
 }
