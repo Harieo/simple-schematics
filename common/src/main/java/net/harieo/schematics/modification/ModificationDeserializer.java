@@ -1,6 +1,7 @@
 package net.harieo.schematics.modification;
 
 import com.google.gson.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
@@ -22,6 +23,6 @@ public abstract class ModificationDeserializer<T extends Modification> implement
         }
     }
 
-    public abstract T deserialize(JsonObject jsonObject);
+    public abstract T deserialize(@NotNull JsonObject jsonObject);
 
 }
