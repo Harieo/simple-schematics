@@ -1,9 +1,9 @@
 package net.harieo.schematics.paper.modification.impl;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.harieo.schematics.paper.modification.BukkitModification;
+import net.harieo.schematics.paper.modification.impl.blueprint.BukkitModificationJsonBlueprint;
+import net.harieo.schematics.paper.modification.impl.deserializer.BlockModificationJsonDeserializer;
+import net.harieo.schematics.paper.modification.impl.serializer.BlockModificationJsonSerializer;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.position.Coordinate;
 import org.bukkit.Material;
@@ -17,6 +17,11 @@ import org.jetbrains.annotations.NotNull;
 public class BlockModification extends BukkitModification {
 
     public static final String MATERIAL_KEY = "material";
+    public static final BukkitModificationJsonBlueprint<BlockModification> BLUEPRINT =
+            new BukkitModificationJsonBlueprint<>(
+                    new BlockModificationJsonSerializer(),
+                    new BlockModificationJsonDeserializer()
+            );
 
     private final Material blockMaterial;
 
@@ -36,6 +41,10 @@ public class BlockModification extends BukkitModification {
         this.blockMaterial = blockMaterial;
     }
 
+    public Material getBlockMaterial() {
+        return blockMaterial;
+    }
+
     @Override
     public boolean isAvailable(@NotNull BukkitCoordinate bukkitCoordinate) {
         return toBlock(bukkitCoordinate).getType() != blockMaterial;
@@ -46,13 +55,13 @@ public class BlockModification extends BukkitModification {
         toBlock(bukkitCoordinate).setType(blockMaterial);
     }
 
-    public Block toBlock(@NotNull BukkitCoordinate bukkitCoordinate) {
-        return bukkitCoordinate.toLocation().getBlock();
+    @Override
+    public BukkitModificationJsonBlueprint<? extends BukkitModification> getJsonBlueprint() {
+        return BLUEPRINT;
     }
 
-    @Override
-    protected void addExtraSerializationData(@NotNull JsonObject serializedObject) {
-        serializedObject.addProperty(MATERIAL_KEY, blockMaterial.name());
+    public Block toBlock(@NotNull BukkitCoordinate bukkitCoordinate) {
+        return bukkitCoordinate.toLocation().getBlock();
     }
 
 }

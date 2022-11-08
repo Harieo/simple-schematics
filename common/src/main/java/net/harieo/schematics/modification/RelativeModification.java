@@ -1,7 +1,5 @@
 package net.harieo.schematics.modification;
 
-import com.google.gson.*;
-import net.harieo.schematics.modification.serialization.ModificationDeserializer;
 import net.harieo.schematics.modification.serialization.json.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
@@ -14,8 +12,6 @@ public class RelativeModification<T extends Modification> extends Modification {
 
     private final T actualModification;
     private final Vector vector;
-
-    private final transient RelativeModificationJsonBlueprint<T> jsonBlueprint;
 
     /**
      * A record of a {@link Modification} which applies based on a {@link Vector} relative to a variable {@link Coordinate}.
@@ -31,10 +27,6 @@ public class RelativeModification<T extends Modification> extends Modification {
         }
         this.actualModification = actualModification;
         this.vector = vector;
-
-        // Must declare blueprint so that is casts the exact type T instead of implying Modification
-        ModificationJsonBlueprint<T> actualModificationBlueprint = actualModification.getJsonBlueprint();
-        this.jsonBlueprint = new RelativeModificationJsonBlueprint<>(actualModificationBlueprint.getDeserializer());
     }
 
     /**
@@ -82,10 +74,17 @@ public class RelativeModification<T extends Modification> extends Modification {
         actualModification.apply(getRelativeCoordinate(initialPosition));
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public ModificationJsonBlueprint<RelativeModification<T>> getJsonBlueprint() {
-        return jsonBlueprint;
+    /**
+     * Creates a JSON blueprint for this object.
+     *
+     * @param actualModificationBlueprint the JSON blueprint for the actual {@link Modification} stored in this object
+     * @return the JSON blueprint
+     * @apiNote This method creates the blueprint when called because it requires extra data that is not necessary for
+     * the function of {@link RelativeModification} as a whole. Namely, a blueprint on how to de-construct the actual
+     * {@link Modification} relative to the {@link Vector}.
+     */
+    public RelativeModificationJsonBlueprint<T> createJsonBlueprint(@NotNull ModificationJsonBlueprint<T> actualModificationBlueprint) {
+        return new RelativeModificationJsonBlueprint<>(actualModificationBlueprint);
     }
 
 }

@@ -1,7 +1,9 @@
 package net.harieo.schematics.paper.modification.impl;
 
-import com.google.gson.JsonObject;
 import net.harieo.schematics.paper.modification.BukkitModification;
+import net.harieo.schematics.paper.modification.impl.blueprint.BukkitModificationJsonBlueprint;
+import net.harieo.schematics.paper.modification.impl.deserializer.EntitySpawnModificationJsonDeserializer;
+import net.harieo.schematics.paper.modification.impl.serializer.EntitySpawnModificationJsonSerializer;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,18 +16,27 @@ import org.jetbrains.annotations.NotNull;
 public class EntitySpawnModification extends BukkitModification {
 
     public static final String ENTITY_TYPE_KEY = "entity-type";
+    public static final BukkitModificationJsonBlueprint<EntitySpawnModification> BLUEPRINT =
+            new BukkitModificationJsonBlueprint<>(
+                    new EntitySpawnModificationJsonSerializer(),
+                    new EntitySpawnModificationJsonDeserializer()
+            );
 
     private final EntityType entityType;
 
     /**
      * A {@link BukkitModification} which spawns an entity in the given {@link World}.
      *
-     * @param world the Bukkit world in which this modification takes place
+     * @param world      the Bukkit world in which this modification takes place
      * @param entityType the type of entity to spawn
      */
     public EntitySpawnModification(@NotNull World world, @NotNull EntityType entityType) {
         super("entity-spawn", world);
         this.entityType = entityType;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
     }
 
     @Override
@@ -40,8 +51,8 @@ public class EntitySpawnModification extends BukkitModification {
     }
 
     @Override
-    protected void addExtraSerializationData(@NotNull JsonObject serializedObject) {
-        serializedObject.addProperty(ENTITY_TYPE_KEY, entityType.name());
+    public BukkitModificationJsonBlueprint<? extends BukkitModification> getJsonBlueprint() {
+        return BLUEPRINT;
     }
 
 }

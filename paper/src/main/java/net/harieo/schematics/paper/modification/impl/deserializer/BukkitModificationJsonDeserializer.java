@@ -1,7 +1,9 @@
-package net.harieo.schematics.paper.modification;
+package net.harieo.schematics.paper.modification.impl.deserializer;
 
 import com.google.gson.JsonObject;
 import net.harieo.schematics.modification.serialization.ModificationDeserializer;
+import net.harieo.schematics.modification.serialization.json.ModificationJsonDeserializer;
+import net.harieo.schematics.paper.modification.BukkitModification;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the type of modification being deserialized
  */
-public abstract class BukkitModificationDeserializer<T extends BukkitModification> extends ModificationDeserializer<T> {
+public abstract class BukkitModificationJsonDeserializer<T extends BukkitModification> extends ModificationJsonDeserializer<T> {
 
     /**
      * Parses {@link World} from a serialized JSON object for {@link BukkitModification}, then passes the object to

@@ -2,7 +2,6 @@ package net.harieo.schematics.paper.modification.impl.deserializer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.harieo.schematics.paper.modification.BukkitModificationDeserializer;
 import net.harieo.schematics.paper.modification.impl.BlockModification;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public class BlockModificationDeserializer extends BukkitModificationDeserializer<BlockModification> {
+public class BlockModificationJsonDeserializer extends BukkitModificationJsonDeserializer<BlockModification> {
 
     @Override
     public BlockModification deserialize(@NotNull JsonObject object, @NotNull World world) {

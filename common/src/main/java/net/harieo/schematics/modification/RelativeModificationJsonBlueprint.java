@@ -15,27 +15,29 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
     /**
      * A JSON blueprint for {@link RelativeModification} which is effectively a {@link Vector} and another type of {@link Modification}.
      *
-     * @param actualModificationDeserializer the deserializer for the actual {@link Modification} contained within the {@link RelativeModification}
+     * @param actualModificationBlueprint a {@link ModificationJsonBlueprint} for the serialization of the inner {@link Modification}
      */
-    public RelativeModificationJsonBlueprint(@NotNull ModificationDeserializer<T, JsonObject> actualModificationDeserializer) {
+    public RelativeModificationJsonBlueprint(@NotNull ModificationJsonBlueprint<T> actualModificationBlueprint) {
         super(
-                new RelativeModificationJsonSerializer<>(),
-                new RelativeModificationJsonDeserializer<>(actualModificationDeserializer)
+                new RelativeModificationJsonSerializer<>(actualModificationBlueprint.getSerializer()),
+                new RelativeModificationJsonDeserializer<>(actualModificationBlueprint.getDeserializer())
         );
     }
 
     public static class RelativeModificationJsonSerializer<T extends Modification>
             extends ModificationJsonSerializer<RelativeModification<T>> {
 
+        private final ModificationSerializer<T, JsonObject> serializer;
+
+        public RelativeModificationJsonSerializer(@NotNull ModificationSerializer<T, JsonObject> jsonSerializer) {
+            this.serializer = jsonSerializer;
+        }
+
         @Override
         public void addSerializationData(@NotNull RelativeModification<T> relativeModification,
                                          @NotNull JsonObject serializedObject) {
-            Modification actualModification = relativeModification.getActualModification();
             serializedObject.add("vector", relativeModification.getVector().serializeToJson());
-            serializedObject.add(
-                    "actual-modification",
-                    actualModification.getJsonBlueprint().getSerializer().serialize(actualModification)
-            );
+            serializedObject.add("actual-modification", serializer.serialize(relativeModification.getActualModification()));
         }
 
     }
@@ -45,7 +47,7 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
 
         private final ModificationDeserializer<T, JsonObject> deserializer;
 
-        public RelativeModificationJsonDeserializer(ModificationDeserializer<T, JsonObject> deserializer) {
+        public RelativeModificationJsonDeserializer(@NotNull ModificationDeserializer<T, JsonObject> deserializer) {
             this.deserializer = deserializer;
         }
 
