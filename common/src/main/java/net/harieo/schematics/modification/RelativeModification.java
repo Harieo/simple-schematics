@@ -1,6 +1,8 @@
 package net.harieo.schematics.modification;
 
 import com.google.gson.*;
+import net.harieo.schematics.modification.serialization.ModificationDeserializer;
+import net.harieo.schematics.modification.serialization.json.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +14,8 @@ public class RelativeModification<T extends Modification> extends Modification {
 
     private final T actualModification;
     private final Vector vector;
+
+    private final transient RelativeModificationJsonBlueprint<T> jsonBlueprint;
 
     /**
      * A record of a {@link Modification} which applies based on a {@link Vector} relative to a variable {@link Coordinate}.
@@ -27,6 +31,10 @@ public class RelativeModification<T extends Modification> extends Modification {
         }
         this.actualModification = actualModification;
         this.vector = vector;
+
+        // Must declare blueprint so that is casts the exact type T instead of implying Modification
+        ModificationJsonBlueprint<T> actualModificationBlueprint = actualModification.getJsonBlueprint();
+        this.jsonBlueprint = new RelativeModificationJsonBlueprint<>(actualModificationBlueprint.getDeserializer());
     }
 
     /**
@@ -75,26 +83,9 @@ public class RelativeModification<T extends Modification> extends Modification {
     }
 
     @Override
-    protected void addSerializationData(@NotNull JsonObject serializedObject) {
-        serializedObject.add("vector", vector.serializeToJson());
-        serializedObject.add("actual-modification", actualModification.serializeToJson());
-    }
-
-    /**
-     * Deserializes a serialized {@link RelativeModification} by using a {@link ModificationDeserializer} to deserialize the
-     * internal actual {@link Modification} and deserializing the {@link Vector} using {@link Coordinate#deserialize(JsonObject)}.
-     *
-     * @param serializedObject the serialized {@link RelativeModification}
-     * @param modificationDeserializer the deserializer for the type of {@link Modification} which the {@link RelativeModification} should contain
-     * @return the deserialized {@link RelativeModification} with the matching internal {@link Modification} type
-     * @param <T> the type of the actual {@link Modification} contained within the {@link RelativeModification}
-     */
-    public static <T extends Modification> RelativeModification<T> deserializeJson(@NotNull JsonObject serializedObject,
-                                                                                   @NotNull ModificationDeserializer<T> modificationDeserializer) {
-        JsonObject serializedActualModification = serializedObject.getAsJsonObject("actual-modification");
-        T deserializedModification = modificationDeserializer.deserialize(serializedActualModification);
-        Vector deserializedVector = Coordinate.deserialize(serializedObject.getAsJsonObject("vector")).toVector();
-        return new RelativeModification<>(deserializedModification, deserializedVector);
+    @SuppressWarnings("unchecked")
+    public ModificationJsonBlueprint<RelativeModification<T>> getJsonBlueprint() {
+        return jsonBlueprint;
     }
 
 }
