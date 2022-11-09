@@ -3,6 +3,7 @@ package net.harieo.schematics.modification;
 import net.harieo.schematics.serialization.impl.modification.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
+import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
 import org.jetbrains.annotations.NotNull;
 
 /**
