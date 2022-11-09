@@ -3,9 +3,9 @@ package net.harieo.schematics.modification;
 import com.google.gson.JsonObject;
 import net.harieo.schematics.serialization.Deserializer;
 import net.harieo.schematics.serialization.Serializer;
-import net.harieo.schematics.serialization.impl.ModificationJsonBlueprint;
-import net.harieo.schematics.serialization.impl.ModificationJsonDeserializer;
-import net.harieo.schematics.serialization.impl.ModificationJsonSerializer;
+import net.harieo.schematics.serialization.impl.modification.ModificationJsonBlueprint;
+import net.harieo.schematics.serialization.impl.modification.ModificationJsonDeserializer;
+import net.harieo.schematics.serialization.impl.modification.ModificationJsonSerializer;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
         @Override
         public void addSerializationData(@NotNull RelativeModification<T> relativeModification,
                                          @NotNull JsonObject serializedObject) {
-            serializedObject.add("vector", relativeModification.getVector().serializeToJson());
+            serializedObject.add("vector", Coordinate.DEFAULT_JSON_BLUEPRINT.serialize(relativeModification.getVector()));
             serializedObject.add("actual-modification", serializer.serialize(relativeModification.getActualModification()));
         }
 
@@ -55,7 +55,9 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
         public RelativeModification<T> deserialize(@NotNull JsonObject serializedObject) {
             JsonObject serializedActualModification = serializedObject.getAsJsonObject("actual-modification");
             T deserializedModification = deserializer.deserialize(serializedActualModification);
-            Vector deserializedVector = Coordinate.deserialize(serializedObject.getAsJsonObject("vector")).toVector();
+            Vector deserializedVector = Coordinate.DEFAULT_JSON_BLUEPRINT
+                    .deserialize(serializedObject.getAsJsonObject("vector"))
+                    .toVector();
             return new RelativeModification<T>(deserializedModification, deserializedVector);
         }
 

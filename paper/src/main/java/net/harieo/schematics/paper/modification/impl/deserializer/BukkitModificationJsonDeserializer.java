@@ -1,7 +1,7 @@
 package net.harieo.schematics.paper.modification.impl.deserializer;
 
 import com.google.gson.JsonObject;
-import net.harieo.schematics.serialization.impl.ModificationJsonDeserializer;
+import net.harieo.schematics.serialization.impl.modification.ModificationJsonDeserializer;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

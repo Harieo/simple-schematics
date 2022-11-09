@@ -24,8 +24,16 @@ public class Blueprint<T, V> {
         return serializer;
     }
 
+    public V serialize(@NotNull T deserializedObject) {
+        return getSerializer().serialize(deserializedObject);
+    }
+
     public Deserializer<T, V> getDeserializer() {
         return deserializer;
+    }
+
+    public T deserialize(@NotNull V serializedObject) {
+        return getDeserializer().deserialize(serializedObject);
     }
 
 }

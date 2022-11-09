@@ -1,6 +1,6 @@
 package net.harieo.schematics.paper.modification.impl.blueprint;
 
-import net.harieo.schematics.serialization.impl.ModificationJsonBlueprint;
+import net.harieo.schematics.serialization.impl.modification.ModificationJsonBlueprint;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.modification.impl.deserializer.BukkitModificationJsonDeserializer;
 import net.harieo.schematics.paper.modification.impl.serializer.BukkitModificationJsonSerializer;

@@ -1,6 +1,6 @@
 package net.harieo.schematics.position;
 
-import com.google.gson.JsonObject;
+import net.harieo.schematics.serialization.impl.coordinate.CoordinateJsonBlueprint;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * A 3-dimensional coordinate.
  */
 public class Coordinate {
+
+    public static final CoordinateJsonBlueprint DEFAULT_JSON_BLUEPRINT = new CoordinateJsonBlueprint();
 
     protected final double x;
     protected final double y;
@@ -68,33 +70,6 @@ public class Coordinate {
     @Contract(pure = true)
     public Vector toVector() {
         return new Vector(x, y, z);
-    }
-
-    /**
-     * Serializes these coordinates as a JSON.
-     *
-     * @return the JSON coordinates
-     */
-    public @NotNull JsonObject serializeToJson() {
-        JsonObject serializedObject = new JsonObject();
-        serializedObject.addProperty("x", x);
-        serializedObject.addProperty("y", y);
-        serializedObject.addProperty("z", z);
-        return serializedObject;
-    }
-
-    /**
-     * Deserializes a serialized coordinate.
-     *
-     * @param serializedCoordinate the serialized coordinate
-     * @return the deserialized coordinate
-     * @apiNote If the expected serialized coordinate is a {@link Vector}, then simply call {@link #toVector()} to convert types.
-     */
-    public static Coordinate deserialize(@NotNull JsonObject serializedCoordinate) {
-        double x = serializedCoordinate.get("x").getAsDouble();
-        double y = serializedCoordinate.get("y").getAsDouble();
-        double z = serializedCoordinate.get("z").getAsDouble();
-        return new Coordinate(x, y, z);
     }
 
 }

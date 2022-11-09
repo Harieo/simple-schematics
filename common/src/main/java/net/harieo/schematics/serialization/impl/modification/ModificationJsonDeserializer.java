@@ -1,4 +1,4 @@
-package net.harieo.schematics.serialization.impl;
+package net.harieo.schematics.serialization.impl.modification;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
