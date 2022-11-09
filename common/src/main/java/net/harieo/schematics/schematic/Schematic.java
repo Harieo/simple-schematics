@@ -21,7 +21,7 @@ public class Schematic {
 
     private final String id;
     private final Coordinate initialPosition;
-    private final List<RelativeModification> modifications = new ArrayList<>();
+    private final List<RelativeModification<? extends Modification>> modifications = new ArrayList<>();
 
     /**
      * A schematic with an optional identifier and a non-optional initial {@link Coordinate} which modifications are
@@ -31,7 +31,8 @@ public class Schematic {
      * @param initialPosition the initial {@link Coordinate}
      * @param initialModifications any initial modifications
      */
-    public Schematic(@Nullable String id, @NotNull Coordinate initialPosition, RelativeModification... initialModifications) {
+    @SafeVarargs
+    public Schematic(@Nullable String id, @NotNull Coordinate initialPosition, RelativeModification<? extends Modification>... initialModifications) {
         this.id = id;
         this.initialPosition = initialPosition;
         if (initialModifications.length > 0) {
@@ -62,7 +63,7 @@ public class Schematic {
      *
      * @return the list of modifications to create this schematic
      */
-    public @NotNull @Unmodifiable List<RelativeModification> getModifications() {
+    public @NotNull @Unmodifiable List<RelativeModification<? extends Modification>> getModifications() {
         return ImmutableList.copyOf(modifications);
     }
 
@@ -71,7 +72,7 @@ public class Schematic {
      *
      * @param relativeModification the relative modification
      */
-    public void addModification(@NotNull RelativeModification relativeModification) {
+    public void addModification(@NotNull RelativeModification<? extends Modification> relativeModification) {
         modifications.add(relativeModification);
     }
 
@@ -84,7 +85,7 @@ public class Schematic {
      * @param vector the vector which gives the correct coordinate relative to the schematic's initial coordinate
      */
     public void addModification(@NotNull Modification modification, @NotNull Vector vector) {
-        modifications.add(new RelativeModification(modification, vector));
+        modifications.add(new RelativeModification<>(modification, vector));
     }
 
     /**
@@ -95,7 +96,7 @@ public class Schematic {
      * @param modification the modification to be made
      */
     public void addAbsoluteModification(@NotNull Modification modification) {
-        modifications.add(new RelativeModification(modification, new Vector(0, 0, 0)));
+        modifications.add(new RelativeModification<>(modification, new Vector(0, 0, 0)));
     }
 
     /**
@@ -103,7 +104,7 @@ public class Schematic {
      *
      * @param modification the object to remove from the list
      */
-    public void removeModification(@NotNull RelativeModification modification) {
+    public void removeModification(@NotNull RelativeModification<? extends Modification> modification) {
         modifications.remove(modification);
     }
 

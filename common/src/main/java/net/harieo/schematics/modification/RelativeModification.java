@@ -1,6 +1,6 @@
 package net.harieo.schematics.modification;
 
-import net.harieo.schematics.modification.serialization.json.ModificationJsonBlueprint;
+import net.harieo.schematics.serialization.impl.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import org.jetbrains.annotations.NotNull;

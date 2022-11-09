@@ -1,11 +1,11 @@
 package net.harieo.schematics.modification;
 
 import com.google.gson.JsonObject;
-import net.harieo.schematics.modification.serialization.ModificationDeserializer;
-import net.harieo.schematics.modification.serialization.ModificationSerializer;
-import net.harieo.schematics.modification.serialization.json.ModificationJsonBlueprint;
-import net.harieo.schematics.modification.serialization.json.ModificationJsonDeserializer;
-import net.harieo.schematics.modification.serialization.json.ModificationJsonSerializer;
+import net.harieo.schematics.serialization.Deserializer;
+import net.harieo.schematics.serialization.Serializer;
+import net.harieo.schematics.serialization.impl.ModificationJsonBlueprint;
+import net.harieo.schematics.serialization.impl.ModificationJsonDeserializer;
+import net.harieo.schematics.serialization.impl.ModificationJsonSerializer;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +27,9 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
     public static class RelativeModificationJsonSerializer<T extends Modification>
             extends ModificationJsonSerializer<RelativeModification<T>> {
 
-        private final ModificationSerializer<T, JsonObject> serializer;
+        private final Serializer<T, JsonObject> serializer;
 
-        public RelativeModificationJsonSerializer(@NotNull ModificationSerializer<T, JsonObject> jsonSerializer) {
+        public RelativeModificationJsonSerializer(@NotNull Serializer<T, JsonObject> jsonSerializer) {
             this.serializer = jsonSerializer;
         }
 
@@ -45,9 +45,9 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
     public static class RelativeModificationJsonDeserializer<T extends Modification>
             extends ModificationJsonDeserializer<RelativeModification<T>> {
 
-        private final ModificationDeserializer<T, JsonObject> deserializer;
+        private final Deserializer<T, JsonObject> deserializer;
 
-        public RelativeModificationJsonDeserializer(@NotNull ModificationDeserializer<T, JsonObject> deserializer) {
+        public RelativeModificationJsonDeserializer(@NotNull Deserializer<T, JsonObject> deserializer) {
             this.deserializer = deserializer;
         }
 

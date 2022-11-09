@@ -1,8 +1,8 @@
-package net.harieo.schematics.modification.serialization.json;
+package net.harieo.schematics.serialization.impl;
 
 import com.google.gson.JsonObject;
 import net.harieo.schematics.modification.Modification;
-import net.harieo.schematics.modification.serialization.ModificationSerializer;
+import net.harieo.schematics.serialization.Serializer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the type of modification being serialized
  */
-public abstract class ModificationJsonSerializer<T extends Modification> implements ModificationSerializer<T, JsonObject> {
+public abstract class ModificationJsonSerializer<T extends Modification> implements Serializer<T, JsonObject> {
 
     @Override
     public JsonObject serialize(@NotNull T modification) {

@@ -1,15 +1,14 @@
 package net.harieo.schematics.paper.modification.impl.deserializer;
 
 import com.google.gson.JsonObject;
-import net.harieo.schematics.modification.serialization.ModificationDeserializer;
-import net.harieo.schematics.modification.serialization.json.ModificationJsonDeserializer;
+import net.harieo.schematics.serialization.impl.ModificationJsonDeserializer;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * An implementation of {@link ModificationDeserializer} which parses the required values for a {@link BukkitModification}.
+ * An JSON deserializer which parses the required values for a {@link BukkitModification}.
  *
  * @param <T> the type of modification being deserialized
  */
