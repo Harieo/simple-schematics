@@ -18,4 +18,13 @@ public interface Deserializer<T, V> {
      */
     T deserialize(@NotNull V serializedObject);
 
+    /**
+     * Decides whether the serialized object is valid for the deserialized object type and, therefore, can be
+     * deserialized by this class.
+     *
+     * @param serializedObject the serialized object to be checked
+     * @return whether this deserializer can deserialize the provided serialized object
+     */
+    boolean isValidObject(@NotNull V serializedObject);
+
 }

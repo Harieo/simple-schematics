@@ -1,6 +1,7 @@
 package net.harieo.schematics.schematic;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.position.Coordinate;
@@ -9,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * A set of {@link RelativeModification}s which can be sequentially applied based on an initial {@link Coordinate} to create this schematic.
@@ -21,7 +19,7 @@ public class Schematic {
 
     private final String id;
     private final Coordinate initialPosition;
-    private final List<RelativeModification<? extends Modification>> modifications = new ArrayList<>();
+    private final List<RelativeModification<Modification>> modifications = new ArrayList<>();
 
     /**
      * A schematic with an optional identifier and a non-optional initial {@link Coordinate} which modifications are
@@ -29,15 +27,32 @@ public class Schematic {
      *
      * @param id an optional, unique alphanumeric identifier for this schematic
      * @param initialPosition the initial {@link Coordinate}
-     * @param initialModifications any initial modifications
+     * @param initialModifications any initial modifications as a set
      */
-    @SafeVarargs
-    public Schematic(@Nullable String id, @NotNull Coordinate initialPosition, RelativeModification<? extends Modification>... initialModifications) {
+    public Schematic(@Nullable String id,
+                     @NotNull Coordinate initialPosition,
+                     Set<RelativeModification<Modification>> initialModifications) {
         this.id = id;
         this.initialPosition = initialPosition;
-        if (initialModifications.length > 0) {
-            modifications.addAll(Arrays.asList(initialModifications));
+        if (!initialModifications.isEmpty()) {
+            modifications.addAll(initialModifications);
         }
+    }
+
+    /**
+     * A schematic with an optional identifier and a non-optional initial {@link Coordinate} which modifications are
+     * relative to. This method converts an optional array of initial modifications into a {@link Set} for the default
+     * constructor.
+     *
+     * @param id an optional, unique alphanumeric identifier for this schematic
+     * @param initialPosition the initial {@link Coordinate}
+     * @param initialModifications any initial modifications as an array
+     */
+    @SafeVarargs
+    public Schematic(@Nullable String id,
+                     @NotNull Coordinate initialPosition,
+                     RelativeModification<Modification>... initialModifications) {
+        this(id, initialPosition, Sets.newHashSet(initialModifications));
     }
 
     /**
@@ -63,7 +78,7 @@ public class Schematic {
      *
      * @return the list of modifications to create this schematic
      */
-    public @NotNull @Unmodifiable List<RelativeModification<? extends Modification>> getModifications() {
+    public @NotNull @Unmodifiable List<RelativeModification<Modification>> getModifications() {
         return ImmutableList.copyOf(modifications);
     }
 
@@ -72,7 +87,7 @@ public class Schematic {
      *
      * @param relativeModification the relative modification
      */
-    public void addModification(@NotNull RelativeModification<? extends Modification> relativeModification) {
+    public void addModification(@NotNull RelativeModification<Modification> relativeModification) {
         modifications.add(relativeModification);
     }
 

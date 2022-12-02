@@ -61,6 +61,13 @@ public class CoordinateJsonBlueprint extends Blueprint<Coordinate, JsonObject> {
             return new Coordinate(x, y, z);
         }
 
+        @Override
+        public boolean isValidObject(@NotNull JsonObject serializedObject) {
+            return serializedObject.has("x")
+                    && serializedObject.has("y")
+                    && serializedObject.has("z");
+        }
+
     }
 
 }

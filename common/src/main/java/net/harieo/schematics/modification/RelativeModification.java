@@ -1,10 +1,14 @@
 package net.harieo.schematics.modification;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.serialization.impl.modification.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * A {@link Modification} which applies based on a {@link Vector} relative to a static {@link Coordinate}.
@@ -13,6 +17,8 @@ public class RelativeModification<T extends Modification> extends Modification {
 
     private final T actualModification;
     private final Vector vector;
+
+    private ModificationJsonBlueprint<T> actualModificationJsonBlueprint;
 
     /**
      * A record of a {@link Modification} which applies based on a {@link Vector} relative to a variable {@link Coordinate}.
@@ -42,6 +48,22 @@ public class RelativeModification<T extends Modification> extends Modification {
      */
     public Vector getVector() {
         return vector;
+    }
+
+    /**
+     * Sets the blueprint for the actual modification, so that it can be serialized in this class.
+     *
+     * @param actualModificationJsonBlueprint the blueprint for the actual modification
+     */
+    public void setActualModificationJsonBlueprint(@Nullable ModificationJsonBlueprint<T> actualModificationJsonBlueprint) {
+        this.actualModificationJsonBlueprint = actualModificationJsonBlueprint;
+    }
+
+    /**
+     * @return the actual modification blueprint, if it is provided
+     */
+    public Optional<ModificationJsonBlueprint<T>> getActualModificationJsonBlueprint() {
+        return Optional.ofNullable(actualModificationJsonBlueprint);
     }
 
     /**
@@ -86,6 +108,18 @@ public class RelativeModification<T extends Modification> extends Modification {
      */
     public RelativeModificationJsonBlueprint<T> createJsonBlueprint(@NotNull ModificationJsonBlueprint<T> actualModificationBlueprint) {
         return new RelativeModificationJsonBlueprint<>(actualModificationBlueprint);
+    }
+
+    /**
+     * Creates a JSON blueprint for this object on the assumption that the actual modification blueprint has been provided.
+     *
+     * @return the JSON blueprint for this object
+     * @throws IllegalStateException if {@link #actualModificationJsonBlueprint} is not provided
+     */
+    public RelativeModificationJsonBlueprint<T> createJsonBlueprint() {
+        return createJsonBlueprint(getActualModificationJsonBlueprint()
+                .orElseThrow(() -> new IllegalStateException("No actual modification blueprint provided"))
+        );
     }
 
 }

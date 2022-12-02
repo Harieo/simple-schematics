@@ -1,5 +1,6 @@
 package net.harieo.schematics.serialization.impl.modification;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
@@ -83,6 +84,19 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
                     .deserialize(serializedObject.getAsJsonObject("vector"))
                     .toVector();
             return new RelativeModification<T>(deserializedModification, deserializedVector);
+        }
+
+        @Override
+        public boolean isValidObject(@NotNull JsonObject serializedObject) {
+            boolean actualModificationValid = false;
+            if (serializedObject.has("actual-modification")) { // Must have an actual modification
+                JsonElement actualModificationElement = serializedObject.get("actual-modification");
+                if (actualModificationElement.isJsonObject()) { // The actual modification must be formatted as JsonObject
+                    // The actual modification deserializer must then decide that it is valid
+                    actualModificationValid = deserializer.isValidObject(actualModificationElement.getAsJsonObject());
+                }
+            }
+            return serializedObject.has("vector") && actualModificationValid; // Relative modifications also need a vector
         }
 
     }
