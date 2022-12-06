@@ -2,7 +2,6 @@ package net.harieo.schematics.paper.config;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
 import net.harieo.schematics.schematic.Schematic;
@@ -18,7 +17,6 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystemException;
 import java.nio.file.NotDirectoryException;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +29,9 @@ public class SchematicStorage {
 
     // Static constants
     public static final String DEFAULT_SUBDIRECTORY_NAME = "schematics";
+    // Generates filenames as: <schematic id>.json
+    public static final Function<Schematic, String> DEFAULT_FILENAME_GENERATOR = schematic -> schematic.getId()
+            .orElseThrow(() -> new IllegalStateException("Schematic must have id to be saved")) + ".json";
 
     // Fields for file management
     private final SchematicJsonBlueprint schematicJsonBlueprint;
@@ -211,6 +212,29 @@ public class SchematicStorage {
         }
 
         return allSchematicsSaved;
+    }
+
+    /**
+     * An overload of {@link #save(Plugin, String, Function, boolean)} where the subdirectory name is
+     * {@link #DEFAULT_SUBDIRECTORY_NAME}.
+     *
+     * @throws IOException see description for super method {@link #save(Plugin, String, Function, boolean)}
+     */
+    public boolean save(@NotNull Plugin plugin,
+                        @NotNull Function<Schematic, String> fileNameGenerationFunction,
+                        boolean overwrite) throws IOException {
+        return save(plugin, DEFAULT_SUBDIRECTORY_NAME, fileNameGenerationFunction, overwrite);
+    }
+
+    /**
+     * An overload of {@link #save(Plugin, String, Function, boolean)} where the subdirectory name is
+     * {@link #DEFAULT_SUBDIRECTORY_NAME} and the filename generator is {@link #DEFAULT_FILENAME_GENERATOR}.
+     *
+     * @throws IOException see description for super method {@link #save(Plugin, String, Function, boolean)}
+     */
+    public boolean save(@NotNull Plugin plugin,
+                        boolean overwrite) throws IOException {
+        return save(plugin, DEFAULT_SUBDIRECTORY_NAME, DEFAULT_FILENAME_GENERATOR, overwrite);
     }
 
 }

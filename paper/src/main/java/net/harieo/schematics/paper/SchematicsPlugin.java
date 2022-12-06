@@ -43,6 +43,20 @@ public class SchematicsPlugin extends JavaPlugin {
         commandManager.registerCommand(new SchematicCommand(this));
     }
 
+    @Override
+    public void onDisable() {
+        try {
+            getLogger().info("Saving schematics to file...");
+            if (schematicStorage.save(this, true)) {
+                getLogger().info("Successfully saved all cached schematics.");
+            } else {
+                getLogger().warning("Failed to save all cached schematics.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public SchematicToolConfiguration getSchematicToolConfiguration() {
         return schematicToolConfiguration;
     }
