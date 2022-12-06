@@ -47,6 +47,10 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
         this(new CoordinateJsonBlueprint().getDeserializer(), modificationDeserializers);
     }
 
+    public void addModificationDeserializer(@NotNull Deserializer<Modification, JsonObject> deserializer) {
+        modificationDeserializers.add(deserializer);
+    }
+
     @Override
     public Schematic deserialize(@NotNull JsonObject serializedObject) {
         String id = null;
@@ -65,7 +69,9 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
                 .forEach(serializedRelativeModification ->
                     modificationDeserializers.forEach(actualModificationDeserializer -> {
                         RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<Modification>
-                                relativeModificationJsonDeserializer = new RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<>(actualModificationDeserializer);
+                                relativeModificationJsonDeserializer = new RelativeModificationJsonBlueprint
+                                .RelativeModificationJsonDeserializer<>(actualModificationDeserializer);
+
                         if (relativeModificationJsonDeserializer.isValidObject(serializedRelativeModification)) {
                             modifications.add(relativeModificationJsonDeserializer.deserialize(serializedRelativeModification));
                         }
