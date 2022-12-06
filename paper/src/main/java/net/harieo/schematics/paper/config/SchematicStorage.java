@@ -19,6 +19,7 @@ import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -148,6 +149,18 @@ public class SchematicStorage {
      */
     public @Unmodifiable Set<Schematic> getSchematics() {
         return ImmutableSet.copyOf(schematics);
+    }
+
+    /**
+     * Finds a {@link Schematic} from its unique identifier.
+     *
+     * @param schematicId the identifier for the schematic to be found
+     * @return optionally the matching schematic, if present
+     */
+    public Optional<Schematic> getSchematic(@NotNull String schematicId) {
+        return getSchematics().stream()
+                .filter(schematic -> schematic.getId().map(id -> id.equals(schematicId)).orElse(false))
+                .findAny();
     }
 
     /**

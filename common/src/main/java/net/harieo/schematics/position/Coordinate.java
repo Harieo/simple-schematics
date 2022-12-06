@@ -72,4 +72,17 @@ public class Coordinate {
         return new Vector(x, y, z);
     }
 
+    /**
+     * Calculates the {@link Vector} from this coordinate to another coordinate.
+     *
+     * @param relativeCoordinate the coordinate relative to this coordinate
+     * @return the vector from this coordinate to the relative coordinate
+     */
+    public Vector getRelativeVector(@NotNull Coordinate relativeCoordinate) {
+        double x = getX() - relativeCoordinate.getX();
+        double y = getY() - relativeCoordinate.getY();
+        double z = getZ() - relativeCoordinate.getZ();
+        return new Vector(x, y, z);
+    }
+
 }

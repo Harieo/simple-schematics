@@ -38,7 +38,7 @@ public class SchematicCommandPersistence {
             BukkitCuboid cuboid = new BukkitCuboid(bukkitCoordinate, null);
             markedAreaMap.put(uuid, cuboid);
             return cuboid;
-        });
+        }).setLowerCorner(bukkitCoordinate);
     }
 
     /**
@@ -53,7 +53,7 @@ public class SchematicCommandPersistence {
             BukkitCuboid cuboid = new BukkitCuboid(null, bukkitCoordinate);
             markedAreaMap.put(uuid, cuboid);
             return cuboid;
-        });
+        }).setUpperCorner(bukkitCoordinate);
     }
     
 }

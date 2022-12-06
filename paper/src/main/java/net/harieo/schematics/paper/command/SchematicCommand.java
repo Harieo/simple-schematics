@@ -2,14 +2,30 @@ package net.harieo.schematics.paper.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import net.harieo.schematics.modification.Modification;
+import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.paper.SchematicsPlugin;
+import net.harieo.schematics.paper.config.SchematicStorage;
+import net.harieo.schematics.paper.modification.impl.BlockModification;
+import net.harieo.schematics.paper.position.BukkitCoordinate;
+import net.harieo.schematics.position.Coordinate;
+import net.harieo.schematics.position.Vector;
+import net.harieo.schematics.schematic.Schematic;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-@CommandAlias("schematic|simpleschematics|simpleschematic|schema")
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@CommandAlias("schematic|schematics|simpleschematics|simpleschematic|schema")
 public class SchematicCommand extends BaseCommand {
 
     private final SchematicsPlugin plugin;
@@ -51,6 +67,39 @@ public class SchematicCommand extends BaseCommand {
 
         // If no positions are found...
         player.sendMessage(ChatColor.RED + "Unknown position: Expected: /... setpos <pos1/pos2>");
+    }
+
+    @Subcommand("create|make|schematic")
+    @CommandPermission("schematics.create")
+    public void createSchematic(Player player,
+                                @Name("schematic id") String schematicId) {
+        SchematicStorage schematicStorage = plugin.getSchematicStorage();
+        Optional<Schematic> optionalExistingSchematic = schematicStorage.getSchematic(schematicId);
+        if (optionalExistingSchematic.isPresent()) {
+            player.sendMessage(ChatColor.RED + "A schematic with that id already exists.");
+            return;
+        }
+
+        persistence.getCuboid(player.getUniqueId()).ifPresentOrElse(cuboid -> {
+            if (cuboid.isValid()) {
+                BukkitCoordinate initialPosition = cuboid.getLowerCorner().orElseThrow();
+                Set<RelativeModification<? extends Modification>> modifications = cuboid.getInnerCoordinates(1)
+                        .stream()
+                        .map(coordinate -> {
+                            Block block = coordinate.toLocation().getBlock();
+                            BlockModification blockModification = new BlockModification(cuboid.getWorld(), block.getType());
+                            Vector vector = initialPosition.getRelativeVector(coordinate);
+                            return new RelativeModification<>(blockModification, vector);
+                        })
+                        .collect(Collectors.toSet());
+
+                Schematic schematic = new Schematic(schematicId, initialPosition, modifications);
+                schematicStorage.addSchematic(schematic);
+                player.sendMessage(ChatColor.GREEN + "The schematic has been stored with id " + schematicId + ".");
+                player.sendMessage(ChatColor.GRAY + "Use " + ChatColor.YELLOW + "/schematics save " + ChatColor.GRAY + "to save to file.");
+            }
+        }, () -> player.sendMessage(ChatColor.RED + "A schematic requires two positions to form a cuboid region. " +
+                "You have none set."));
     }
 
 }
