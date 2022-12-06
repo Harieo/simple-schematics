@@ -31,20 +31,6 @@ public class SchematicToolConfiguration {
 
     private ItemStack schematicToolItem;
 
-    /**
-     * A configuration to load the {@link ItemStack} which players can use to set positions.
-     *
-     * @param plugin the plugin to load the configuration from
-     */
-    public SchematicToolConfiguration(@NotNull Plugin plugin) {
-        try {
-            load(plugin);
-        } catch (IOException e) {
-            // Note: This is a silent runtime exception so that a clarifying message can be attached before printing
-            new RuntimeException("Schematic tool configuration failed to load", e).printStackTrace();
-        }
-    }
-
     public Optional<ItemStack> getSchematicTool() {
         return Optional.ofNullable(schematicToolItem);
     }
