@@ -3,6 +3,7 @@ package net.harieo.schematics.paper.config;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import net.harieo.schematics.modification.Modification;
+import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Blueprint;
@@ -29,9 +30,9 @@ import java.util.function.Function;
 public class SchematicStorage {
 
     // Static constants
-    public static final String DEFAULT_SUBDIRECTORY_NAME = "schematics";
+    public static String DEFAULT_SUBDIRECTORY_NAME = "schematics";
     // Generates filenames as: <schematic id>.json
-    public static final Function<Schematic, String> DEFAULT_FILENAME_GENERATOR = schematic -> schematic.getId()
+    public static Function<Schematic, String> DEFAULT_FILENAME_GENERATOR = schematic -> schematic.getId()
             .orElseThrow(() -> new IllegalStateException("Schematic must have id to be saved")) + ".json";
 
     // Fields for file management
@@ -67,7 +68,7 @@ public class SchematicStorage {
         SchematicJsonDeserializer schematicJsonDeserializer = new SchematicJsonDeserializer();
         bukkitJsonBlueprintRegistry.getBlueprints().stream()
                 .map(Blueprint::getDeserializer)
-                .map(deserializer -> (Deserializer<Modification, JsonObject>) deserializer)
+                .map(deserializer -> (Deserializer<? extends Modification, JsonObject>) deserializer)
                 .forEach(schematicJsonDeserializer::addModificationDeserializer);
         // A serializer is created by default in the blueprint, so we do not need to create one for this constructor
         this.schematicJsonBlueprint = new SchematicJsonBlueprint(schematicJsonDeserializer);
@@ -195,7 +196,7 @@ public class SchematicStorage {
      * @apiNote If this method returns false, it will be because overwriting was not permitted and a file with the name
      * already exists.
      */
-    public boolean save(@NotNull Plugin plugin,
+    public boolean saveAll(@NotNull Plugin plugin,
                      @NotNull String subDirectoryName,
                      @NotNull Function<Schematic, String> fileNameGenerationFunction,
                      boolean overwrite) throws IOException {
@@ -228,26 +229,25 @@ public class SchematicStorage {
     }
 
     /**
-     * An overload of {@link #save(Plugin, String, Function, boolean)} where the subdirectory name is
+     * An overload of {@link #saveAll(Plugin, String, Function, boolean)} where the subdirectory name is
      * {@link #DEFAULT_SUBDIRECTORY_NAME}.
      *
-     * @throws IOException see description for super method {@link #save(Plugin, String, Function, boolean)}
+     * @throws IOException see description for super method {@link #saveAll(Plugin, String, Function, boolean)}
      */
-    public boolean save(@NotNull Plugin plugin,
+    public boolean saveAll(@NotNull Plugin plugin,
                         @NotNull Function<Schematic, String> fileNameGenerationFunction,
                         boolean overwrite) throws IOException {
-        return save(plugin, DEFAULT_SUBDIRECTORY_NAME, fileNameGenerationFunction, overwrite);
+        return saveAll(plugin, DEFAULT_SUBDIRECTORY_NAME, fileNameGenerationFunction, overwrite);
     }
 
     /**
-     * An overload of {@link #save(Plugin, String, Function, boolean)} where the subdirectory name is
+     * An overload of {@link #saveAll(Plugin, String, Function, boolean)} where the subdirectory name is
      * {@link #DEFAULT_SUBDIRECTORY_NAME} and the filename generator is {@link #DEFAULT_FILENAME_GENERATOR}.
      *
-     * @throws IOException see description for super method {@link #save(Plugin, String, Function, boolean)}
+     * @throws IOException see description for super method {@link #saveAll(Plugin, String, Function, boolean)}
      */
-    public boolean save(@NotNull Plugin plugin,
-                        boolean overwrite) throws IOException {
-        return save(plugin, DEFAULT_SUBDIRECTORY_NAME, DEFAULT_FILENAME_GENERATOR, overwrite);
+    public boolean saveAll(@NotNull Plugin plugin, boolean overwrite) throws IOException {
+        return saveAll(plugin, DEFAULT_SUBDIRECTORY_NAME, DEFAULT_FILENAME_GENERATOR, overwrite);
     }
 
 }

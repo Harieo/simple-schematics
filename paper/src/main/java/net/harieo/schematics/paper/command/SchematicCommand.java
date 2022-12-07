@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,8 +72,7 @@ public class SchematicCommand extends BaseCommand {
 
     @Subcommand("create|make|schematic")
     @CommandPermission("schematics.create")
-    public void createSchematic(Player player,
-                                @Name("schematic id") String schematicId) {
+    public void createSchematic(Player player, @Name("schematic id") String schematicId) {
         SchematicStorage schematicStorage = plugin.getSchematicStorage();
         Optional<Schematic> optionalExistingSchematic = schematicStorage.getSchematic(schematicId);
         if (optionalExistingSchematic.isPresent()) {
@@ -83,13 +83,13 @@ public class SchematicCommand extends BaseCommand {
         persistence.getCuboid(player.getUniqueId()).ifPresentOrElse(cuboid -> {
             if (cuboid.isValid()) {
                 BukkitCoordinate initialPosition = cuboid.getLowerCorner().orElseThrow();
-                Set<RelativeModification<? extends Modification>> modifications = cuboid.getInnerCoordinates(1)
+                Set<RelativeModification<Modification>> modifications = cuboid.getInnerCoordinates(1)
                         .stream()
                         .map(coordinate -> {
                             Block block = coordinate.toLocation().getBlock();
                             BlockModification blockModification = new BlockModification(cuboid.getWorld(), block.getType());
                             Vector vector = initialPosition.getRelativeVector(coordinate);
-                            return new RelativeModification<>(blockModification, vector);
+                            return new RelativeModification<Modification>(blockModification, vector);
                         })
                         .collect(Collectors.toSet());
 
@@ -100,6 +100,24 @@ public class SchematicCommand extends BaseCommand {
             }
         }, () -> player.sendMessage(ChatColor.RED + "A schematic requires two positions to form a cuboid region. " +
                 "You have none set."));
+    }
+
+    @Subcommand("save|saveschematic|saveschem|commit")
+    @CommandCompletion("@schematics")
+    @CommandPermission("schematics.save")
+    public void saveSchematic(Player player, @Default(value = "true") boolean overwrite) {
+        SchematicStorage schematicStorage = plugin.getSchematicStorage();
+        try {
+            if (schematicStorage.saveAll(plugin, overwrite)) {
+                player.sendMessage(ChatColor.GREEN + "Successfully saved all cached schematics.");
+            } else {
+                player.sendMessage(ChatColor.YELLOW + "Successfully saved some schematics. " +
+                        "No overwriting occurred, so some schematics were not saved.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            player.sendMessage(ChatColor.RED + "Failed to save all schematics. Please check console for an error.");
+        }
     }
 
 }

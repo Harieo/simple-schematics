@@ -6,10 +6,12 @@ import net.harieo.schematics.paper.command.SchematicCommand;
 import net.harieo.schematics.paper.config.SchematicStorage;
 import net.harieo.schematics.paper.config.SchematicToolConfiguration;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
+import net.harieo.schematics.schematic.Schematic;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +41,12 @@ public class SchematicsPlugin extends JavaPlugin {
                         .map(CommandPosition::getId)
                         .collect(Collectors.toSet())
         );
+        commandManager.getCommandCompletions().registerCompletion("schematics",
+                handler -> schematicStorage.getSchematics().stream()
+                        .map(Schematic::getId)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toSet()));
 
         commandManager.registerCommand(new SchematicCommand(this));
     }
@@ -47,7 +55,7 @@ public class SchematicsPlugin extends JavaPlugin {
     public void onDisable() {
         try {
             getLogger().info("Saving schematics to file...");
-            if (schematicStorage.save(this, true)) {
+            if (schematicStorage.saveAll(this, true)) {
                 getLogger().info("Successfully saved all cached schematics.");
             } else {
                 getLogger().warning("Failed to save all cached schematics.");

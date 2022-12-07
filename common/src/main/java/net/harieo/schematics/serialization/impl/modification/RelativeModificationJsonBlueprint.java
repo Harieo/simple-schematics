@@ -65,14 +65,14 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
     public static class RelativeModificationJsonDeserializer<T extends Modification>
             extends ModificationJsonDeserializer<RelativeModification<T>> {
 
-        private final Deserializer<T, JsonObject> deserializer;
+        private final Deserializer<? extends T, JsonObject> deserializer;
 
         /**
          * A {@link Deserializer} for {@link RelativeModification} from JSON.
          *
          * @param deserializer the deserializer for the inner {@link Modification}
          */
-        public RelativeModificationJsonDeserializer(@NotNull Deserializer<T, JsonObject> deserializer) {
+        public RelativeModificationJsonDeserializer(@NotNull Deserializer<? extends T, JsonObject> deserializer) {
             this.deserializer = deserializer;
         }
 

@@ -22,4 +22,9 @@ public class BlockModificationJsonDeserializer extends BukkitModificationJsonDes
         }
     }
 
+    @Override
+    public boolean isValidObject(@NotNull JsonObject serializedObject) {
+        return serializedObject.has(BlockModification.MATERIAL_KEY);
+    }
+
 }

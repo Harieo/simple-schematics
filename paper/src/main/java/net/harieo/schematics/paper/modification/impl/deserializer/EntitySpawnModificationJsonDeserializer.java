@@ -22,4 +22,9 @@ public class EntitySpawnModificationJsonDeserializer extends BukkitModificationJ
         }
     }
 
+    @Override
+    public boolean isValidObject(@NotNull JsonObject serializedObject) {
+        return serializedObject.has(EntitySpawnModification.ENTITY_TYPE_KEY);
+    }
+
 }

@@ -23,7 +23,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
 
     private final Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer;
 
-    private final Set<Deserializer<Modification, JsonObject>> modificationDeserializers = new HashSet<>();
+    private final Set<Deserializer<? extends Modification, JsonObject>> modificationDeserializers = new HashSet<>();
 
     /**
      * A deserializer from JSON format for {@link Schematic} with a specified {@link Deserializer} for
@@ -33,7 +33,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
      */
     @SafeVarargs
     public SchematicJsonDeserializer(@NotNull Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer,
-                                     @NotNull Deserializer<Modification, JsonObject>... modificationDeserializers) {
+                                     @NotNull Deserializer<? extends Modification, JsonObject>... modificationDeserializers) {
         this.coordinateJsonDeserializer = coordinateJsonDeserializer;
         this.modificationDeserializers.addAll(Arrays.asList(modificationDeserializers));
     }
@@ -43,11 +43,11 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
      * to provide the coordinate {@link Deserializer}.
      */
     @SafeVarargs
-    public SchematicJsonDeserializer(@NotNull Deserializer<Modification, JsonObject>... modificationDeserializers) {
+    public SchematicJsonDeserializer(@NotNull Deserializer<? extends Modification, JsonObject>... modificationDeserializers) {
         this(new CoordinateJsonBlueprint().getDeserializer(), modificationDeserializers);
     }
 
-    public void addModificationDeserializer(@NotNull Deserializer<Modification, JsonObject> deserializer) {
+    public void addModificationDeserializer(@NotNull Deserializer<? extends Modification, JsonObject> deserializer) {
         modificationDeserializers.add(deserializer);
     }
 
