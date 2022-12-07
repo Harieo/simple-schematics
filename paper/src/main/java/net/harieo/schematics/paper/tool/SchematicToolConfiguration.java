@@ -1,4 +1,4 @@
-package net.harieo.schematics.paper.config;
+package net.harieo.schematics.paper.tool;
 
 import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;

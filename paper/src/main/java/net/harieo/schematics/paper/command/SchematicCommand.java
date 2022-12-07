@@ -5,14 +5,12 @@ import co.aikar.commands.annotation.*;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.paper.SchematicsPlugin;
-import net.harieo.schematics.paper.config.SchematicStorage;
+import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.paper.modification.impl.BlockModification;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
-import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
 import net.harieo.schematics.schematic.Schematic;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,8 +18,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,6 +31,10 @@ public class SchematicCommand extends BaseCommand {
 
     public SchematicCommand(@NotNull SchematicsPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public @NotNull SchematicCommandPersistence getPersistence() {
+        return persistence;
     }
 
     @Subcommand("tool|wand|schemtool|schemwand")

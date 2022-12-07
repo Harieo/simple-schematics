@@ -1,4 +1,4 @@
-package net.harieo.schematics.paper.config;
+package net.harieo.schematics.paper.schematic;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;

@@ -3,10 +3,12 @@ package net.harieo.schematics.paper;
 import co.aikar.commands.PaperCommandManager;
 import net.harieo.schematics.paper.command.CommandPosition;
 import net.harieo.schematics.paper.command.SchematicCommand;
-import net.harieo.schematics.paper.config.SchematicStorage;
-import net.harieo.schematics.paper.config.SchematicToolConfiguration;
+import net.harieo.schematics.paper.schematic.SchematicStorage;
+import net.harieo.schematics.paper.tool.SchematicToolConfiguration;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
+import net.harieo.schematics.paper.tool.SchematicToolListener;
 import net.harieo.schematics.schematic.Schematic;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -48,7 +50,11 @@ public class SchematicsPlugin extends JavaPlugin {
                         .map(Optional::get)
                         .collect(Collectors.toSet()));
 
-        commandManager.registerCommand(new SchematicCommand(this));
+        SchematicCommand schematicCommand = new SchematicCommand(this);
+        commandManager.registerCommand(schematicCommand);
+
+        Bukkit.getPluginManager().registerEvents(new SchematicToolListener(schematicToolConfiguration,
+                schematicCommand.getPersistence()), this);
     }
 
     @Override
