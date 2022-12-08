@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 /**
  * A deserializer from JSON format for {@link Schematic}.
@@ -64,7 +65,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
 
         Set<RelativeModification<? extends Modification>> modifications = new HashSet<>();
         JsonArray rawModificationArray = serializedObject.getAsJsonArray("modifications");
-        rawModificationArray.asList().stream()
+        StreamSupport.stream(rawModificationArray.spliterator(), false) // Older method to provide legacy support of JsonArray
                 .filter(JsonElement::isJsonObject)
                 .map(JsonElement::getAsJsonObject)
                 .forEach(serializedRelativeModification ->
