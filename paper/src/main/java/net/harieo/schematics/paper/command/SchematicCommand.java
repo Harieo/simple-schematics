@@ -12,6 +12,7 @@ import net.harieo.schematics.position.Vector;
 import net.harieo.schematics.schematic.Schematic;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -43,24 +44,24 @@ public class SchematicCommand extends BaseCommand {
     @CommandCompletion("@schematics")
     @CommandPermission("schematics.list")
     @Default
-    public void listSchematics(Player player) {
+    public void listSchematics(CommandSender sender) {
         SchematicStorage schematicStorage = plugin.getSchematicStorage();
         Set<Schematic> schematics = schematicStorage.getSchematics();
         if (schematics.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "There are no loaded schematics.");
+            sender.sendMessage(ChatColor.RED + "There are no loaded schematics.");
         } else {
             schematics.forEach(schematic -> {
                 // Display schematic name
-                player.sendMessage(ChatColor.YELLOW + schematic.getId().orElse("[Unnamed Schematic]"));
+                sender.sendMessage(ChatColor.YELLOW + schematic.getId().orElse("[Unnamed Schematic]"));
                 // Display the initial position
-                player.sendMessage(ChatColor.GREEN + "Initial Position: " + schematic.getInitialPosition());
+                sender.sendMessage(ChatColor.GREEN + "Initial Position: " + schematic.getInitialPosition());
                 // Print out a count of all the modification types in the schematic
                 Map<String, Integer> typeCountMap = new HashMap<>();
                 schematic.getModifications().stream().map(RelativeModification::getActualModification).forEach(modification -> {
                     String type = modification.getType();
                     typeCountMap.put(type, typeCountMap.getOrDefault(type, 0) + 1);
                 });
-                typeCountMap.forEach((type, count) -> player.sendMessage(ChatColor.LIGHT_PURPLE + "    " + type + " x" + count));
+                typeCountMap.forEach((type, count) -> sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + type + " x" + count));
             });
         }
     }
