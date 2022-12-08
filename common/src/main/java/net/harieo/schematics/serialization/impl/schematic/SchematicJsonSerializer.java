@@ -2,10 +2,13 @@ package net.harieo.schematics.serialization.impl.schematic;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.harieo.schematics.modification.Modification;
+import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Serializer;
 import net.harieo.schematics.serialization.impl.coordinate.CoordinateJsonBlueprint;
+import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,13 +35,22 @@ public class SchematicJsonSerializer implements Serializer<Schematic, JsonObject
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public JsonObject serialize(@NotNull Schematic schematic) {
         JsonObject jsonObject = new JsonObject();
         schematic.getId().ifPresent(id -> jsonObject.addProperty("id", id));
         jsonObject.add("initial-position", coordinateJsonSerializer.serialize(schematic.getInitialPosition()));
         JsonArray modificationArray = new JsonArray();
-        schematic.getModifications().forEach(relativeModification -> relativeModification.createJsonBlueprint()
-                .serialize(relativeModification));
+        schematic.getModifications().stream()
+                .map(relativeModification -> (RelativeModification<Modification>) relativeModification) // TODO test this
+                .forEach(
+                relativeModification -> {
+                    RelativeModificationJsonBlueprint<Modification> blueprint = relativeModification.createJsonBlueprint();
+                    modificationArray.add(
+                            blueprint.serialize(relativeModification)
+                    );
+                }
+        );
         jsonObject.add("modifications", modificationArray);
         return jsonObject;
     }

@@ -19,7 +19,7 @@ public class Schematic {
 
     private final String id;
     private final Coordinate initialPosition;
-    private final List<RelativeModification<Modification>> modifications = new ArrayList<>();
+    private final List<RelativeModification<? extends Modification>> modifications = new ArrayList<>();
 
     /**
      * A schematic with an optional identifier and a non-optional initial {@link Coordinate} which modifications are
@@ -31,7 +31,7 @@ public class Schematic {
      */
     public Schematic(@Nullable String id,
                      @NotNull Coordinate initialPosition,
-                     Set<RelativeModification<Modification>> initialModifications) {
+                     Set<RelativeModification<? extends Modification>> initialModifications) {
         this.id = id;
         this.initialPosition = initialPosition;
         if (!initialModifications.isEmpty()) {
@@ -78,7 +78,7 @@ public class Schematic {
      *
      * @return the list of modifications to create this schematic
      */
-    public @NotNull @Unmodifiable List<RelativeModification<Modification>> getModifications() {
+    public @NotNull @Unmodifiable List<RelativeModification<? extends Modification>> getModifications() {
         return ImmutableList.copyOf(modifications);
     }
 
@@ -87,7 +87,7 @@ public class Schematic {
      *
      * @param relativeModification the relative modification
      */
-    public void addModification(@NotNull RelativeModification<Modification> relativeModification) {
+    public void addModification(@NotNull RelativeModification<? extends Modification> relativeModification) {
         modifications.add(relativeModification);
     }
 

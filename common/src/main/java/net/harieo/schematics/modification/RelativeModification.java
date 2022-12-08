@@ -24,7 +24,7 @@ public class RelativeModification<T extends Modification> extends Modification {
      * A record of a {@link Modification} which applies based on a {@link Vector} relative to a variable {@link Coordinate}.
      *
      * @param actualModification the actual modification which will occur at the relative {@link Coordinate}
-     * @param vector the vector to be applied to coordinates to retrieve the actual coordinate for the actual modification
+     * @param vector             the vector to be applied to coordinates to retrieve the actual coordinate for the actual modification
      * @throws IllegalArgumentException if the actual modification provided is another instance of {@link RelativeModification}
      */
     public RelativeModification(@NotNull T actualModification, @NotNull Vector vector) {

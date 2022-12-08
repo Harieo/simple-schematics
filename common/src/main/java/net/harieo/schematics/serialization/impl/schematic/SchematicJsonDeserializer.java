@@ -52,6 +52,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Schematic deserialize(@NotNull JsonObject serializedObject) {
         String id = null;
         if (serializedObject.has("id")) {
@@ -61,7 +62,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
         Coordinate initialPosition = coordinateJsonDeserializer.deserialize(
                 serializedObject.getAsJsonObject("initial-position"));
 
-        Set<RelativeModification<Modification>> modifications = new HashSet<>();
+        Set<RelativeModification<? extends Modification>> modifications = new HashSet<>();
         JsonArray rawModificationArray = serializedObject.getAsJsonArray("modifications");
         rawModificationArray.asList().stream()
                 .filter(JsonElement::isJsonObject)
@@ -69,7 +70,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
                 .forEach(serializedRelativeModification ->
                     modificationDeserializers.forEach(actualModificationDeserializer -> {
                         RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<Modification>
-                                relativeModificationJsonDeserializer = new RelativeModificationJsonBlueprint
+                                relativeModificationJsonDeserializer = (RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<Modification>) new RelativeModificationJsonBlueprint
                                 .RelativeModificationJsonDeserializer<>(actualModificationDeserializer);
 
                         if (relativeModificationJsonDeserializer.isValidObject(serializedRelativeModification)) {

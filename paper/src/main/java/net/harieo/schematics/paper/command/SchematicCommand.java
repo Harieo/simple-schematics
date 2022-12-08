@@ -83,13 +83,15 @@ public class SchematicCommand extends BaseCommand {
         persistence.getCuboid(player.getUniqueId()).ifPresentOrElse(cuboid -> {
             if (cuboid.isValid()) {
                 BukkitCoordinate initialPosition = cuboid.getLowerCorner().orElseThrow();
-                Set<RelativeModification<Modification>> modifications = cuboid.getInnerCoordinates(1)
+                Set<RelativeModification<? extends Modification>> modifications = cuboid.getInnerCoordinates(1)
                         .stream()
                         .map(coordinate -> {
                             Block block = coordinate.toLocation().getBlock();
                             BlockModification blockModification = new BlockModification(cuboid.getWorld(), block.getType());
                             Vector vector = initialPosition.getRelativeVector(coordinate);
-                            return new RelativeModification<Modification>(blockModification, vector);
+                            RelativeModification<BlockModification> relativeModification = new RelativeModification<>(blockModification, vector);
+                            relativeModification.setActualModificationJsonBlueprint(BlockModification.BLUEPRINT);
+                            return relativeModification;
                         })
                         .collect(Collectors.toSet());
 

@@ -4,6 +4,7 @@ import net.harieo.schematics.paper.command.SchematicCommandPersistence;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,10 +30,13 @@ public class SchematicToolListener implements Listener {
         ItemStack item = event.getItem();
         if (item != null && schematicToolConfiguration.getSchematicTool().map(item::isSimilar).orElse(false)) {
             if (player.hasPermission("schematics.tool.use")) {
-                Location clickLocation = event.getInteractionPoint();
-                if (clickLocation == null) {
+                Block block = event.getClickedBlock();
+                if (block == null) {
                     return;
                 }
+
+                Location clickLocation = block.getLocation();
+                event.setCancelled(true);
 
                 BukkitCoordinate clickCoordinate = new BukkitCoordinate(clickLocation);
                 if (event.getAction() == Action.LEFT_CLICK_BLOCK) {

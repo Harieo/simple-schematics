@@ -43,6 +43,7 @@ public class SchematicToolConfiguration {
         } else {
             FileConfiguration configuration = new YamlConfiguration();
             configuration.set("tool", DEFAULT_ITEM);
+            schematicToolItem = DEFAULT_ITEM;
             configuration.save(configFile);
         }
     }
