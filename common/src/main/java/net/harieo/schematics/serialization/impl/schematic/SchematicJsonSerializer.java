@@ -42,7 +42,7 @@ public class SchematicJsonSerializer implements Serializer<Schematic, JsonObject
         jsonObject.add("initial-position", coordinateJsonSerializer.serialize(schematic.getInitialPosition()));
         JsonArray modificationArray = new JsonArray();
         schematic.getModifications().stream()
-                .map(relativeModification -> (RelativeModification<Modification>) relativeModification) // TODO test this
+                .map(relativeModification -> (RelativeModification<Modification>) relativeModification)
                 .forEach(
                 relativeModification -> {
                     RelativeModificationJsonBlueprint<Modification> blueprint = relativeModification.createJsonBlueprint();

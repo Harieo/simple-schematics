@@ -18,6 +18,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,6 +37,32 @@ public class SchematicCommand extends BaseCommand {
 
     public @NotNull SchematicCommandPersistence getPersistence() {
         return persistence;
+    }
+
+    @Subcommand("list|schematics|listschematics")
+    @CommandCompletion("@schematics")
+    @CommandPermission("schematics.list")
+    @Default
+    public void listSchematics(Player player) {
+        SchematicStorage schematicStorage = plugin.getSchematicStorage();
+        Set<Schematic> schematics = schematicStorage.getSchematics();
+        if (schematics.isEmpty()) {
+            player.sendMessage(ChatColor.RED + "There are no loaded schematics.");
+        } else {
+            schematics.forEach(schematic -> {
+                // Display schematic name
+                player.sendMessage(ChatColor.YELLOW + schematic.getId().orElse("[Unnamed Schematic]"));
+                // Display the initial position
+                player.sendMessage(ChatColor.GREEN + "Initial Position: " + schematic.getInitialPosition());
+                // Print out a count of all the modification types in the schematic
+                Map<String, Integer> typeCountMap = new HashMap<>();
+                schematic.getModifications().stream().map(RelativeModification::getActualModification).forEach(modification -> {
+                    String type = modification.getType();
+                    typeCountMap.put(type, typeCountMap.getOrDefault(type, 0) + 1);
+                });
+                typeCountMap.forEach((type, count) -> player.sendMessage(ChatColor.LIGHT_PURPLE + "    " + type + " x" + count));
+            });
+        }
     }
 
     @Subcommand("tool|wand|schemtool|schemwand")

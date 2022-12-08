@@ -33,6 +33,7 @@ public class SchematicsPlugin extends JavaPlugin {
 
         try {
             schematicToolConfiguration.load(this);
+            schematicStorage.load(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

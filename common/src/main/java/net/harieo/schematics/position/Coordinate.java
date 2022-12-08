@@ -85,4 +85,9 @@ public class Coordinate {
         return new Vector(x, y, z);
     }
 
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + "," + z + ")";
+    }
+
 }

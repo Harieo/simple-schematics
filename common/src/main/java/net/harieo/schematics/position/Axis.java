@@ -57,4 +57,8 @@ public class Axis {
         return ImmutableSet.copyOf(range);
     }
 
+    @Override
+    public String toString() {
+        return "(" + lowerEndpoint + " -> " + upperEndpoint + ")";
+    }
 }

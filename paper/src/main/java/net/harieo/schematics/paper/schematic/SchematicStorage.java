@@ -1,6 +1,7 @@
 package net.harieo.schematics.paper.schematic;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.*;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.paper.modification.BukkitModification;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
@@ -23,6 +25,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * A handler for reading and writing schematic files in storage.
@@ -60,7 +63,8 @@ public class SchematicStorage {
      * <p>
      * A default {@link SchematicJsonSerializer} is then created to form the {@link SchematicJsonBlueprint}
      * required for this class.
-     *</p>
+     * </p>
+     *
      * @param bukkitJsonBlueprintRegistry the blueprint registry for modifications
      */
     @SuppressWarnings("unchecked")
@@ -85,6 +89,7 @@ public class SchematicStorage {
      */
     public void load(@NotNull Plugin plugin, @NotNull String subDirectoryName, @Nullable FilenameFilter filenameFilter)
             throws IOException {
+        plugin.getLogger().info("Loading schematics from subdirectory " + subDirectoryName + "...");
         File schematicDirectory = new File(plugin.getDataFolder(), subDirectoryName);
         if (!schematicDirectory.exists()) {
             if (schematicDirectory.mkdir()) {
@@ -185,21 +190,21 @@ public class SchematicStorage {
     /**
      * Saves all schematics cached in this instance.
      *
-     * @param plugin the plugin managing the schematic files
-     * @param subDirectoryName the subdirectory of the plugin directory where schematics files should be saved
+     * @param plugin                     the plugin managing the schematic files
+     * @param subDirectoryName           the subdirectory of the plugin directory where schematics files should be saved
      * @param fileNameGenerationFunction a function to generate the name of the file for each schematic
-     * @param overwrite whether to overwrite existing files with the same name of a schematic
-     * @throws IOException if the subdirectory does not exist and cannot be created
-     * @throws NotDirectoryException if the subdirectory specified is not a directory
-     * @throws FileAlreadyExistsException if overwriting is permitted but a file cannot be overwritten due to an error
+     * @param overwrite                  whether to overwrite existing files with the same name of a schematic
      * @return true if all schematics were successfully saved, or false if one or more schematics could not be saved.
+     * @throws IOException                if the subdirectory does not exist and cannot be created
+     * @throws NotDirectoryException      if the subdirectory specified is not a directory
+     * @throws FileAlreadyExistsException if overwriting is permitted but a file cannot be overwritten due to an error
      * @apiNote If this method returns false, it will be because overwriting was not permitted and a file with the name
      * already exists.
      */
     public boolean saveAll(@NotNull Plugin plugin,
-                     @NotNull String subDirectoryName,
-                     @NotNull Function<Schematic, String> fileNameGenerationFunction,
-                     boolean overwrite) throws IOException {
+                           @NotNull String subDirectoryName,
+                           @NotNull Function<Schematic, String> fileNameGenerationFunction,
+                           boolean overwrite) throws IOException {
         File schematicDirectory = new File(plugin.getDataFolder(), subDirectoryName);
         if (!schematicDirectory.exists() && !schematicDirectory.mkdir()) {
             throw new IOException("Failed to create schematics directory");
@@ -212,8 +217,10 @@ public class SchematicStorage {
             String fileName = fileNameGenerationFunction.apply(schematic);
             File schematicFile = new File(schematicDirectory, fileName);
             if (schematicFile.exists()) {
-                if (overwrite && !schematicFile.delete()) { // Attempt to delete file for overwrite, exception on failure
-                    throw new FileAlreadyExistsException("Unable to overwrite schematic file " + schematicFile.getAbsolutePath());
+                if (overwrite) { // Attempt to delete file for overwrite
+                    if (!schematicFile.delete()) {
+                        throw new FileAlreadyExistsException("Unable to overwrite schematic file " + schematicFile.getAbsolutePath());
+                    }
                 } else {
                     allSchematicsSaved = false;
                     continue; // No authority to overwrite file, so this schematic will be ignored
@@ -235,8 +242,8 @@ public class SchematicStorage {
      * @throws IOException see description for super method {@link #saveAll(Plugin, String, Function, boolean)}
      */
     public boolean saveAll(@NotNull Plugin plugin,
-                        @NotNull Function<Schematic, String> fileNameGenerationFunction,
-                        boolean overwrite) throws IOException {
+                           @NotNull Function<Schematic, String> fileNameGenerationFunction,
+                           boolean overwrite) throws IOException {
         return saveAll(plugin, DEFAULT_SUBDIRECTORY_NAME, fileNameGenerationFunction, overwrite);
     }
 
