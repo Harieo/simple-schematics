@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
+import net.harieo.schematics.serialization.Blueprint;
 import net.harieo.schematics.serialization.Deserializer;
 import net.harieo.schematics.serialization.Serializer;
 import net.harieo.schematics.position.Coordinate;
@@ -22,7 +23,7 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
      *
      * @param actualModificationBlueprint a {@link ModificationJsonBlueprint} for the serialization of the inner {@link Modification}
      */
-    public RelativeModificationJsonBlueprint(@NotNull ModificationJsonBlueprint<T> actualModificationBlueprint) {
+    public RelativeModificationJsonBlueprint(@NotNull Blueprint<T, JsonObject> actualModificationBlueprint) {
         super(
                 new RelativeModificationJsonSerializer<T>(actualModificationBlueprint.getSerializer()),
                 new RelativeModificationJsonDeserializer<T>(actualModificationBlueprint.getDeserializer())

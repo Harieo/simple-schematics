@@ -1,6 +1,7 @@
 package net.harieo.schematics.modification;
 
 import com.google.gson.JsonObject;
+import net.harieo.schematics.serialization.Blueprint;
 import net.harieo.schematics.serialization.impl.modification.ModificationJsonBlueprint;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.position.Vector;
@@ -18,7 +19,7 @@ public class RelativeModification<T extends Modification> extends Modification {
     private final T actualModification;
     private final Vector vector;
 
-    private ModificationJsonBlueprint<T> actualModificationJsonBlueprint;
+    private Blueprint<T, JsonObject> actualModificationJsonBlueprint;
 
     /**
      * A record of a {@link Modification} which applies based on a {@link Vector} relative to a variable {@link Coordinate}.
@@ -55,14 +56,14 @@ public class RelativeModification<T extends Modification> extends Modification {
      *
      * @param actualModificationJsonBlueprint the blueprint for the actual modification
      */
-    public void setActualModificationJsonBlueprint(@Nullable ModificationJsonBlueprint<T> actualModificationJsonBlueprint) {
+    public void setActualModificationJsonBlueprint(@Nullable Blueprint<T, JsonObject> actualModificationJsonBlueprint) {
         this.actualModificationJsonBlueprint = actualModificationJsonBlueprint;
     }
 
     /**
      * @return the actual modification blueprint, if it is provided
      */
-    public Optional<ModificationJsonBlueprint<T>> getActualModificationJsonBlueprint() {
+    public Optional<Blueprint<T, JsonObject>> getActualModificationJsonBlueprint() {
         return Optional.ofNullable(actualModificationJsonBlueprint);
     }
 
@@ -106,7 +107,7 @@ public class RelativeModification<T extends Modification> extends Modification {
      * the function of {@link RelativeModification} as a whole. Namely, a blueprint on how to de-construct the actual
      * {@link Modification} relative to the {@link Vector}.
      */
-    public RelativeModificationJsonBlueprint<T> createJsonBlueprint(@NotNull ModificationJsonBlueprint<T> actualModificationBlueprint) {
+    public RelativeModificationJsonBlueprint<T> createJsonBlueprint(@NotNull Blueprint<T, JsonObject> actualModificationBlueprint) {
         return new RelativeModificationJsonBlueprint<>(actualModificationBlueprint);
     }
 

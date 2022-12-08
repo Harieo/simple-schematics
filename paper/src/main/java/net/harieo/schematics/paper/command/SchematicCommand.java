@@ -41,7 +41,6 @@ public class SchematicCommand extends BaseCommand {
     }
 
     @Subcommand("list|schematics|listschematics")
-    @CommandCompletion("@schematics")
     @CommandPermission("schematics.list")
     @Default
     public void listSchematics(CommandSender sender) {
@@ -149,6 +148,13 @@ public class SchematicCommand extends BaseCommand {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + "Failed to save all schematics. Please check console for an error.");
         }
+    }
+
+    @Subcommand("paste|pasteschematic")
+    @CommandCompletion("@schematics")
+    @CommandPermission("schematics.paste")
+    public void pasteSchematic(Player player, @Name("schematic id") @Values("@schematics") String schematicId) {
+
     }
 
 }

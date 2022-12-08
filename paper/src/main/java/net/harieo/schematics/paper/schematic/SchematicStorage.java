@@ -67,13 +67,9 @@ public class SchematicStorage {
      *
      * @param bukkitJsonBlueprintRegistry the blueprint registry for modifications
      */
-    @SuppressWarnings("unchecked")
     public SchematicStorage(@NotNull BukkitJsonBlueprintRegistry bukkitJsonBlueprintRegistry) {
         SchematicJsonDeserializer schematicJsonDeserializer = new SchematicJsonDeserializer();
-        bukkitJsonBlueprintRegistry.getBlueprints().stream()
-                .map(Blueprint::getDeserializer)
-                .map(deserializer -> (Deserializer<? extends Modification, JsonObject>) deserializer)
-                .forEach(schematicJsonDeserializer::addModificationDeserializer);
+        bukkitJsonBlueprintRegistry.getBlueprints().forEach(schematicJsonDeserializer::addModificationBlueprint);
         // A serializer is created by default in the blueprint, so we do not need to create one for this constructor
         this.schematicJsonBlueprint = new SchematicJsonBlueprint(schematicJsonDeserializer);
     }
@@ -214,6 +210,10 @@ public class SchematicStorage {
 
         boolean allSchematicsSaved = true;
         for (Schematic schematic : schematics) { // Using for loop to include exceptions in 'throws' clause
+            // Load the serialized json first so that any exceptions occur before file deletion
+            String serializedSchematicJson = gson.toJson(schematicJsonBlueprint.serialize(schematic));
+
+            // Delete file if overwriting
             String fileName = fileNameGenerationFunction.apply(schematic);
             File schematicFile = new File(schematicDirectory, fileName);
             if (schematicFile.exists()) {
@@ -227,8 +227,9 @@ public class SchematicStorage {
                 }
             }
 
+            // Write to file
             try (FileWriter writer = new FileWriter(schematicFile)) {
-                writer.write(gson.toJson(schematicJsonBlueprint.serialize(schematic)));
+                writer.write(serializedSchematicJson);
             }
         }
 

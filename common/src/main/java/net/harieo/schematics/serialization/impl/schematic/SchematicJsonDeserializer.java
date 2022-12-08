@@ -7,6 +7,7 @@ import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.schematic.Schematic;
+import net.harieo.schematics.serialization.Blueprint;
 import net.harieo.schematics.serialization.Deserializer;
 import net.harieo.schematics.serialization.impl.coordinate.CoordinateJsonBlueprint;
 import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
@@ -24,7 +25,7 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
 
     private final Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer;
 
-    private final Set<Deserializer<? extends Modification, JsonObject>> modificationDeserializers = new HashSet<>();
+    private final Set<Blueprint<? extends Modification, JsonObject>> modificationBlueprints = new HashSet<>();
 
     /**
      * A deserializer from JSON format for {@link Schematic} with a specified {@link Deserializer} for
@@ -34,9 +35,9 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
      */
     @SafeVarargs
     public SchematicJsonDeserializer(@NotNull Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer,
-                                     @NotNull Deserializer<? extends Modification, JsonObject>... modificationDeserializers) {
+                                     @NotNull Blueprint<? extends Modification, JsonObject>... modificationBlueprints) {
         this.coordinateJsonDeserializer = coordinateJsonDeserializer;
-        this.modificationDeserializers.addAll(Arrays.asList(modificationDeserializers));
+        this.modificationBlueprints.addAll(Arrays.asList(modificationBlueprints));
     }
 
     /**
@@ -44,38 +45,56 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
      * to provide the coordinate {@link Deserializer}.
      */
     @SafeVarargs
-    public SchematicJsonDeserializer(@NotNull Deserializer<? extends Modification, JsonObject>... modificationDeserializers) {
-        this(new CoordinateJsonBlueprint().getDeserializer(), modificationDeserializers);
+    public SchematicJsonDeserializer(@NotNull Blueprint<? extends Modification, JsonObject>... modificationBlueprints) {
+        this(new CoordinateJsonBlueprint().getDeserializer(), modificationBlueprints);
     }
 
-    public void addModificationDeserializer(@NotNull Deserializer<? extends Modification, JsonObject> deserializer) {
-        modificationDeserializers.add(deserializer);
+    public void addModificationBlueprint(@NotNull Blueprint<? extends Modification, JsonObject> deserializer) {
+        modificationBlueprints.add(deserializer);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Schematic deserialize(@NotNull JsonObject serializedObject) {
+        // Get the id, if it is present (optional)
         String id = null;
         if (serializedObject.has("id")) {
             id = serializedObject.get("id").getAsString();
         }
 
+        // Get the initial position coordinate
         Coordinate initialPosition = coordinateJsonDeserializer.deserialize(
                 serializedObject.getAsJsonObject("initial-position"));
 
+        // Load and deserialize all the relative modifications (complicated part)
         Set<RelativeModification<? extends Modification>> modifications = new HashSet<>();
+        // Get the array of serialized modifications
         JsonArray rawModificationArray = serializedObject.getAsJsonArray("modifications");
+        // Stream the modification JSON element and ensure they are formatted as JsonObjects
         StreamSupport.stream(rawModificationArray.spliterator(), false) // Older method to provide legacy support of JsonArray
                 .filter(JsonElement::isJsonObject)
                 .map(JsonElement::getAsJsonObject)
                 .forEach(serializedRelativeModification ->
-                    modificationDeserializers.forEach(actualModificationDeserializer -> {
+                    modificationBlueprints.forEach(actualModificationBlueprint -> { // Check all actual modification blueprints
+                        // Get the deserializer, as our primary function is deserialization of this modification
+                        Deserializer<? extends Modification, JsonObject> actualModificationDeserializer =
+                                actualModificationBlueprint.getDeserializer();
+                        // Load a relative modification deserializer with the actual modification deserializer
+                        // Remember: We are deserializing a relative modification with an unknown actual modification inside it
                         RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<Modification>
                                 relativeModificationJsonDeserializer = (RelativeModificationJsonBlueprint.RelativeModificationJsonDeserializer<Modification>) new RelativeModificationJsonBlueprint
                                 .RelativeModificationJsonDeserializer<>(actualModificationDeserializer);
 
+                        // If this deserializer is capable of deserializing our relative modification
                         if (relativeModificationJsonDeserializer.isValidObject(serializedRelativeModification)) {
-                            modifications.add(relativeModificationJsonDeserializer.deserialize(serializedRelativeModification));
+                            // Then do actually deserialize it
+                            RelativeModification<Modification> deserializedModification =
+                                    relativeModificationJsonDeserializer.deserialize(serializedRelativeModification);
+                            // Set the blueprint while we have it so that we can re-serialize if necessary
+                            deserializedModification.setActualModificationJsonBlueprint(
+                                    (Blueprint<Modification, JsonObject>) actualModificationBlueprint);
+                            // Add to the list of deserialized modifications
+                            modifications.add(deserializedModification);
                         }
                     })
                 );

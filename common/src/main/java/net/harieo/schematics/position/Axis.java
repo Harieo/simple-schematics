@@ -48,6 +48,9 @@ public class Axis {
      */
     public @Unmodifiable Set<Double> getRange(double differenceBetweenPoints) {
         Set<Double> range = new HashSet<>();
+        range.add(lowerEndpoint); // Include lower endpoint
+
+        // Add all points between
         double pointer = lowerEndpoint;
         while ((pointer += differenceBetweenPoints) <= upperEndpoint) {
             range.add(pointer);
