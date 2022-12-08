@@ -38,6 +38,11 @@ public abstract class Animation {
     }
 
     /**
+     * Activates this animation to begin ticking through the queue of transitions.
+     */
+    public abstract void activate();
+
+    /**
      * @return the total amount of time in milliseconds to perform this entire animation, start to finish.
      */
     public long getTotalAnimationTime() {

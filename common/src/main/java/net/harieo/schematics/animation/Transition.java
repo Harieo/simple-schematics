@@ -3,7 +3,7 @@ package net.harieo.schematics.animation;
 /**
  * A single stage of an {@link Animation} which performs one task and a specific point.
  */
-public abstract class Transition {
+public abstract class Transition implements Runnable {
 
     private final long millisecondsBefore;
     private final long millisecondsAfter;
@@ -19,11 +19,6 @@ public abstract class Transition {
         this.millisecondsBefore = millisecondsBefore;
         this.millisecondsAfter = millisecondsAfter;
     }
-
-    /**
-     * Runs this transition
-     */
-    public abstract void run();
 
     /**
      * @return the milliseconds before this transition should run
