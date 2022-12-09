@@ -14,24 +14,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A serializer to JSON format for {@link Schematic}.
  */
-public class SchematicJsonSerializer implements Serializer<Schematic, JsonObject> {
+public class SchematicJsonSerializer<T extends Coordinate> implements Serializer<Schematic, JsonObject> {
 
-    private final Serializer<Coordinate, JsonObject> coordinateJsonSerializer;
+    private final Serializer<T, JsonObject> coordinateJsonSerializer;
 
     /**
      * A schematic serializer to JSON with a specified {@link Serializer} to serialize coordinates.
      *
      * @param coordinateJsonSerializer the serializer for coordinates
      */
-    public SchematicJsonSerializer(@NotNull Serializer<Coordinate, JsonObject> coordinateJsonSerializer) {
+    public SchematicJsonSerializer(@NotNull Serializer<T, JsonObject> coordinateJsonSerializer) {
         this.coordinateJsonSerializer = coordinateJsonSerializer;
-    }
-
-    /**
-     * A default schematic serializer to JSON with a default {@link CoordinateJsonBlueprint} to provide the serializer.
-     */
-    public SchematicJsonSerializer() {
-        this(new CoordinateJsonBlueprint().getSerializer());
     }
 
     @Override
@@ -39,7 +32,7 @@ public class SchematicJsonSerializer implements Serializer<Schematic, JsonObject
     public JsonObject serialize(@NotNull Schematic schematic) {
         JsonObject jsonObject = new JsonObject();
         schematic.getId().ifPresent(id -> jsonObject.addProperty("id", id));
-        jsonObject.add("initial-position", coordinateJsonSerializer.serialize(schematic.getInitialPosition()));
+        jsonObject.add("initial-position", coordinateJsonSerializer.serialize((T) schematic.getInitialPosition()));
         JsonArray modificationArray = new JsonArray();
         schematic.getModifications().stream()
                 .map(relativeModification -> (RelativeModification<Modification>) relativeModification)

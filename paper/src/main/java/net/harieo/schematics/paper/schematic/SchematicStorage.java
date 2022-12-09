@@ -6,6 +6,8 @@ import com.google.gson.*;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
+import net.harieo.schematics.paper.position.BukkitCoordinate;
+import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Blueprint;
 import net.harieo.schematics.serialization.Deserializer;
@@ -39,7 +41,7 @@ public class SchematicStorage {
             .orElseThrow(() -> new IllegalStateException("Schematic must have id to be saved")) + ".json";
 
     // Fields for file management
-    private final SchematicJsonBlueprint schematicJsonBlueprint;
+    private final SchematicJsonBlueprint<BukkitCoordinate> schematicJsonBlueprint;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create(); // For file writing in pretty format
 
     // Cache
@@ -51,27 +53,26 @@ public class SchematicStorage {
      *
      * @param schematicJsonBlueprint for serializing and deserializing schematics
      */
-    public SchematicStorage(@NotNull SchematicJsonBlueprint schematicJsonBlueprint) {
+    public SchematicStorage(@NotNull SchematicJsonBlueprint<BukkitCoordinate> schematicJsonBlueprint) {
         this.schematicJsonBlueprint = schematicJsonBlueprint;
     }
 
     /**
-     * <p>
-     * Constructs this storage instance with a {@link SchematicJsonDeserializer} formed from all the deserializers
-     * in {@link BukkitJsonBlueprintRegistry} for deserializing modifications from storage.
-     * </p>
-     * <p>
-     * A default {@link SchematicJsonSerializer} is then created to form the {@link SchematicJsonBlueprint}
-     * required for this class.
-     * </p>
+     * Constructs this storage instance with a pair of default {@link SchematicJsonSerializer} and
+     * {@link SchematicJsonDeserializer} instances based on {@link BukkitCoordinate} with the default serializer and deserializer from
+     * {@link BukkitJsonCoordinateBlueprint} as arguments.
      *
      * @param bukkitJsonBlueprintRegistry the blueprint registry for modifications
      */
     public SchematicStorage(@NotNull BukkitJsonBlueprintRegistry bukkitJsonBlueprintRegistry) {
-        SchematicJsonDeserializer schematicJsonDeserializer = new SchematicJsonDeserializer();
+        BukkitJsonCoordinateBlueprint bukkitJsonCoordinateBlueprint = new BukkitJsonCoordinateBlueprint();
+        SchematicJsonSerializer<BukkitCoordinate> schematicJsonSerializer = new SchematicJsonSerializer<>
+                (bukkitJsonCoordinateBlueprint.getSerializer());
+        SchematicJsonDeserializer<BukkitCoordinate> schematicJsonDeserializer = new SchematicJsonDeserializer<>
+                (bukkitJsonCoordinateBlueprint.getDeserializer());
         bukkitJsonBlueprintRegistry.getBlueprints().forEach(schematicJsonDeserializer::addModificationBlueprint);
         // A serializer is created by default in the blueprint, so we do not need to create one for this constructor
-        this.schematicJsonBlueprint = new SchematicJsonBlueprint(schematicJsonDeserializer);
+        this.schematicJsonBlueprint = new SchematicJsonBlueprint<>(schematicJsonSerializer, schematicJsonDeserializer);
     }
 
     /**

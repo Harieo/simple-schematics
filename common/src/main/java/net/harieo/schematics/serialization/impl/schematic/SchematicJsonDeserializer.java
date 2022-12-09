@@ -21,9 +21,9 @@ import java.util.stream.StreamSupport;
 /**
  * A deserializer from JSON format for {@link Schematic}.
  */
-public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonObject> {
+public class SchematicJsonDeserializer<T extends Coordinate> implements Deserializer<Schematic, JsonObject> {
 
-    private final Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer;
+    private final Deserializer<T, JsonObject> coordinateJsonDeserializer;
 
     private final Set<Blueprint<? extends Modification, JsonObject>> modificationBlueprints = new HashSet<>();
 
@@ -34,21 +34,18 @@ public class SchematicJsonDeserializer implements Deserializer<Schematic, JsonOb
      * @param coordinateJsonDeserializer the deserializer for deserializing coordinates
      */
     @SafeVarargs
-    public SchematicJsonDeserializer(@NotNull Deserializer<Coordinate, JsonObject> coordinateJsonDeserializer,
+    public SchematicJsonDeserializer(@NotNull Deserializer<T, JsonObject> coordinateJsonDeserializer,
                                      @NotNull Blueprint<? extends Modification, JsonObject>... modificationBlueprints) {
         this.coordinateJsonDeserializer = coordinateJsonDeserializer;
         this.modificationBlueprints.addAll(Arrays.asList(modificationBlueprints));
     }
 
     /**
-     * A default deserializer from JSON format for {@link Schematic} which uses a default {@link CoordinateJsonBlueprint}
-     * to provide the coordinate {@link Deserializer}.
+     * Adds a {@link Modification} {@link Blueprint} to the list of blueprints which can be used for deserializing actual
+     * modifications.
+     *
+     * @param deserializer the blueprint containing the relevant deserializer
      */
-    @SafeVarargs
-    public SchematicJsonDeserializer(@NotNull Blueprint<? extends Modification, JsonObject>... modificationBlueprints) {
-        this(new CoordinateJsonBlueprint().getDeserializer(), modificationBlueprints);
-    }
-
     public void addModificationBlueprint(@NotNull Blueprint<? extends Modification, JsonObject> deserializer) {
         modificationBlueprints.add(deserializer);
     }
