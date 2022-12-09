@@ -3,6 +3,7 @@ package net.harieo.schematics.serialization.registry;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.harieo.schematics.serialization.Blueprint;
+import net.harieo.schematics.serialization.Deserializer;
 import net.harieo.schematics.serialization.Serializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -66,6 +67,19 @@ public class BlueprintRegistry<T, V> {
      */
     public @Unmodifiable Set<Blueprint<? extends T, V>> getBlueprints() {
         return ImmutableSet.copyOf(blueprints);
+    }
+
+    /**
+     * Attempts to find a {@link Deserializer} for the provided serialized object from the list of blueprints.
+     *
+     * @param serializedObject the serialized object requiring a deserializer
+     * @return the matching deserializer, if one is found
+     */
+    public Optional<? extends Deserializer<? extends T, V>> findDeserializer(@NotNull V serializedObject) {
+        return getBlueprints().stream()
+                .filter(blueprint -> blueprint.getDeserializer().isValidObject(serializedObject))
+                .map(Blueprint::getDeserializer)
+                .findAny();
     }
 
 }
