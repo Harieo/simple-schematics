@@ -43,6 +43,11 @@ public abstract class Animation {
     public abstract void activate();
 
     /**
+     * @return whether this animation is currently activated and running.
+     */
+    public abstract boolean isActivated();
+
+    /**
      * @return the total amount of time in milliseconds to perform this entire animation, start to finish.
      */
     public long getTotalAnimationTime() {
@@ -105,7 +110,7 @@ public abstract class Animation {
      */
     public void tick(long milliseconds) {
         if (currentTransition == null && !nextTransition()) {
-            throw new IllegalStateException("No transitions left in queue");
+            return;
         }
 
         millisecondsToCurrentTransition += milliseconds;
@@ -137,6 +142,63 @@ public abstract class Animation {
         return transitions.stream()
                 .mapToLong(Transition::getRunTime)
                 .sum();
+    }
+
+    /**
+     * Ascertains the {@link State} of this animation from the state of its transient values.
+     *
+     * @return the current state of this animation
+     * @apiNote See {@link State} for context on each available state.
+     */
+    public State getState() {
+        if (isActivated()) {
+            if (currentTransition == null) {
+                if (peekNextTransition().isEmpty()) {
+                    return State.FINISHED; // Current transition is null and no further transitions exist
+                } else {
+                    return State.RUNNING; // Current transition is null but there is a further transition
+                }
+            } else {
+                if (!currentTransitionRun && peekNextTransition().isEmpty()) {
+                    return State.ENDING; // The current transition has not run, but it is the last transition
+                } else if (currentTransitionRun && peekNextTransition().isEmpty()) {
+                    return State.FINISHED; // The current transition has run, and there are no further transitions
+                } else {
+                    return State.RUNNING; // There are further transitions in the queue
+                }
+            }
+        } else {
+            if (currentTransition != null) {
+                return State.HALTED; // There is a current transition buffered from the queue, but the animation is deactivated
+            } else if (peekNextTransition().isEmpty()) {
+                return State.FINISHED; // There is no current transition buffered, and the queue is empty
+            } else {
+                return State.READY; // There is no current transition, and the queue is populated
+            }
+        }
+    }
+
+    public enum State {
+        /**
+         * The animation is ready, but not yet activated.
+         */
+        READY,
+        /**
+         * The animation is activated, and has at least one transition queued.
+         */
+        RUNNING,
+        /**
+         * The animation is activated, but has no more transitions left in the queue.
+         */
+        ENDING,
+        /**
+         * The animation is no longer activated and there are no further transitions left in the queue or buffer.
+         */
+        FINISHED,
+        /**
+         * The animation is not finished, but it is also not activated.
+         */
+        HALTED
     }
 
 }
