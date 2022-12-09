@@ -1,11 +1,12 @@
 package net.harieo.schematics.paper.modification.impl;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.paper.modification.BukkitModification;
-import net.harieo.schematics.paper.modification.impl.blueprint.BukkitModificationJsonBlueprint;
 import net.harieo.schematics.paper.modification.impl.deserializer.BlockModificationJsonDeserializer;
 import net.harieo.schematics.paper.modification.impl.serializer.BlockModificationJsonSerializer;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.position.Coordinate;
+import net.harieo.schematics.serialization.Blueprint;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 public class BlockModification extends BukkitModification {
 
     public static final String MATERIAL_KEY = "material";
-    public static final BukkitModificationJsonBlueprint<BlockModification> BLUEPRINT =
-            new BukkitModificationJsonBlueprint<>(
+    public static final Blueprint<BlockModification, JsonObject> BLUEPRINT_JSON =
+            new Blueprint<>(
                     new BlockModificationJsonSerializer(),
                     new BlockModificationJsonDeserializer()
             );
@@ -56,8 +57,8 @@ public class BlockModification extends BukkitModification {
     }
 
     @Override
-    public BukkitModificationJsonBlueprint<? extends BukkitModification> getJsonBlueprint() {
-        return BLUEPRINT;
+    public Blueprint<? extends BukkitModification, JsonObject> getJsonBlueprint() {
+        return BLUEPRINT_JSON;
     }
 
     public Block toBlock(@NotNull BukkitCoordinate bukkitCoordinate) {

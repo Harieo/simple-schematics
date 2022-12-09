@@ -1,10 +1,11 @@
 package net.harieo.schematics.paper.modification.impl;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.paper.modification.BukkitModification;
-import net.harieo.schematics.paper.modification.impl.blueprint.BukkitModificationJsonBlueprint;
 import net.harieo.schematics.paper.modification.impl.deserializer.EntitySpawnModificationJsonDeserializer;
 import net.harieo.schematics.paper.modification.impl.serializer.EntitySpawnModificationJsonSerializer;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
+import net.harieo.schematics.serialization.Blueprint;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -16,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public class EntitySpawnModification extends BukkitModification {
 
     public static final String ENTITY_TYPE_KEY = "entity-type";
-    public static final BukkitModificationJsonBlueprint<EntitySpawnModification> BLUEPRINT =
-            new BukkitModificationJsonBlueprint<>(
+    public static final Blueprint<EntitySpawnModification, JsonObject> BLUEPRINT_JSON =
+            new Blueprint<>(
                     new EntitySpawnModificationJsonSerializer(),
                     new EntitySpawnModificationJsonDeserializer()
             );
@@ -51,8 +52,8 @@ public class EntitySpawnModification extends BukkitModification {
     }
 
     @Override
-    public BukkitModificationJsonBlueprint<? extends BukkitModification> getJsonBlueprint() {
-        return BLUEPRINT;
+    public Blueprint<? extends BukkitModification, JsonObject> getJsonBlueprint() {
+        return BLUEPRINT_JSON;
     }
 
 }

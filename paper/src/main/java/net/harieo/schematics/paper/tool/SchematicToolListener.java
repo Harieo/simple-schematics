@@ -1,6 +1,6 @@
 package net.harieo.schematics.paper.tool;
 
-import net.harieo.schematics.paper.command.SchematicCommandPersistence;
+import net.harieo.schematics.paper.command.schematic.SchematicCommandPersistence;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

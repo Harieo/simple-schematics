@@ -1,17 +1,12 @@
 package net.harieo.schematics.paper.schematic;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.PatternFilenameFilter;
 import com.google.gson.*;
-import net.harieo.schematics.modification.Modification;
-import net.harieo.schematics.paper.modification.BukkitModification;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Blueprint;
-import net.harieo.schematics.serialization.Deserializer;
-import net.harieo.schematics.serialization.impl.schematic.SchematicJsonBlueprint;
 import net.harieo.schematics.serialization.impl.schematic.SchematicJsonDeserializer;
 import net.harieo.schematics.serialization.impl.schematic.SchematicJsonSerializer;
 import org.bukkit.plugin.Plugin;
@@ -19,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
@@ -27,7 +21,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
  * A handler for reading and writing schematic files in storage.
@@ -41,19 +34,19 @@ public class SchematicStorage {
             .orElseThrow(() -> new IllegalStateException("Schematic must have id to be saved")) + ".json";
 
     // Fields for file management
-    private final SchematicJsonBlueprint<BukkitCoordinate> schematicJsonBlueprint;
+    private final Blueprint<Schematic, JsonObject> schematicJsonBlueprint;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create(); // For file writing in pretty format
 
     // Cache
     private final Set<Schematic> schematics = new HashSet<>();
 
     /**
-     * Constructs this storage instance with a {@link SchematicJsonBlueprint} to permit serialization and deserialization
-     * for file writing and reading.
+     * Constructs this storage instance with a {@link Blueprint} of {@link Schematic} to permit serialization and deserialization
+     * from JSON for file writing and reading.
      *
      * @param schematicJsonBlueprint for serializing and deserializing schematics
      */
-    public SchematicStorage(@NotNull SchematicJsonBlueprint<BukkitCoordinate> schematicJsonBlueprint) {
+    public SchematicStorage(@NotNull Blueprint<Schematic, JsonObject> schematicJsonBlueprint) {
         this.schematicJsonBlueprint = schematicJsonBlueprint;
     }
 
@@ -72,7 +65,7 @@ public class SchematicStorage {
                 (bukkitJsonCoordinateBlueprint.getDeserializer());
         bukkitJsonBlueprintRegistry.getBlueprints().forEach(schematicJsonDeserializer::addModificationBlueprint);
         // A serializer is created by default in the blueprint, so we do not need to create one for this constructor
-        this.schematicJsonBlueprint = new SchematicJsonBlueprint<>(schematicJsonSerializer, schematicJsonDeserializer);
+        this.schematicJsonBlueprint = new Blueprint<>(schematicJsonSerializer, schematicJsonDeserializer);
     }
 
     /**

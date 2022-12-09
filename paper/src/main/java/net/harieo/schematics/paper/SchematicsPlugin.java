@@ -2,7 +2,7 @@ package net.harieo.schematics.paper;
 
 import co.aikar.commands.PaperCommandManager;
 import net.harieo.schematics.paper.command.CommandPosition;
-import net.harieo.schematics.paper.command.SchematicCommand;
+import net.harieo.schematics.paper.command.schematic.SchematicCommand;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.paper.tool.SchematicToolConfiguration;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;

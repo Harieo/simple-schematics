@@ -1,10 +1,11 @@
 package net.harieo.schematics.paper.modification;
 
+import com.google.gson.JsonObject;
 import net.harieo.schematics.exception.ModificationException;
 import net.harieo.schematics.modification.Modification;
-import net.harieo.schematics.paper.modification.impl.blueprint.BukkitModificationJsonBlueprint;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.position.Coordinate;
+import net.harieo.schematics.serialization.Blueprint;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +71,6 @@ public abstract class BukkitModification extends Modification {
         return new BukkitCoordinate(world, coordinate);
     }
 
-    public abstract BukkitModificationJsonBlueprint<? extends BukkitModification> getJsonBlueprint();
+    public abstract Blueprint<? extends BukkitModification, JsonObject> getJsonBlueprint();
 
 }

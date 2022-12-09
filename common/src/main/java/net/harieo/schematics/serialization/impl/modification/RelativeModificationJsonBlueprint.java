@@ -16,12 +16,12 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the inner {@link Modification} for the {@link RelativeModification}
  */
-public class RelativeModificationJsonBlueprint<T extends Modification> extends ModificationJsonBlueprint<RelativeModification<T>> {
+public class RelativeModificationJsonBlueprint<T extends Modification> extends Blueprint<RelativeModification<T>, JsonObject> {
 
     /**
      * A JSON blueprint for {@link RelativeModification}.
      *
-     * @param actualModificationBlueprint a {@link ModificationJsonBlueprint} for the serialization of the inner {@link Modification}
+     * @param actualModificationBlueprint a {@link Blueprint} for the serialization of the inner {@link Modification}
      */
     public RelativeModificationJsonBlueprint(@NotNull Blueprint<T, JsonObject> actualModificationBlueprint) {
         super(
@@ -64,7 +64,7 @@ public class RelativeModificationJsonBlueprint<T extends Modification> extends M
      * @param <T> the type of inner {@link Modification}
      */
     public static class RelativeModificationJsonDeserializer<T extends Modification>
-            extends ModificationJsonDeserializer<RelativeModification<T>> {
+            implements Deserializer<RelativeModification<T>, JsonObject> {
 
         private final Deserializer<T, JsonObject> deserializer;
 

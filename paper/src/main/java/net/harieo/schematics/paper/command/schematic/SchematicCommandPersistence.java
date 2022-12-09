@@ -1,4 +1,4 @@
-package net.harieo.schematics.paper.command;
+package net.harieo.schematics.paper.command.schematic;
 
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import net.harieo.schematics.paper.shape.BukkitCuboid;

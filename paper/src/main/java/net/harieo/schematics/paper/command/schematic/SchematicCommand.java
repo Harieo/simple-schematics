@@ -1,10 +1,11 @@
-package net.harieo.schematics.paper.command;
+package net.harieo.schematics.paper.command.schematic;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.paper.SchematicsPlugin;
+import net.harieo.schematics.paper.command.CommandPosition;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.paper.modification.impl.BlockModification;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
@@ -118,7 +119,7 @@ public class SchematicCommand extends BaseCommand {
                             BlockModification blockModification = new BlockModification(cuboid.getWorld(), block.getType());
                             Vector vector = initialPosition.getRelativeVector(coordinate);
                             RelativeModification<BlockModification> relativeModification = new RelativeModification<>(blockModification, vector);
-                            relativeModification.setActualModificationJsonBlueprint(BlockModification.BLUEPRINT);
+                            relativeModification.setActualModificationJsonBlueprint(BlockModification.BLUEPRINT_JSON);
                             return relativeModification;
                         })
                         .collect(Collectors.toSet());

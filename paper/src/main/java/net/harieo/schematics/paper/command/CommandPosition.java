@@ -1,5 +1,7 @@
 package net.harieo.schematics.paper.command;
 
+import net.harieo.schematics.paper.command.schematic.SchematicCommand;
+import net.harieo.schematics.paper.command.schematic.SchematicCommandPersistence;
 import net.harieo.schematics.paper.position.BukkitCoordinate;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
