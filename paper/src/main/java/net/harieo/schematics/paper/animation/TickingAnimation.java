@@ -1,10 +1,15 @@
 package net.harieo.schematics.paper.animation;
 
 import net.harieo.schematics.animation.Animation;
+import net.harieo.schematics.animation.Transition;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.sound.midi.Track;
+import java.util.List;
 
 /**
  * An {@link Animation} which runs on the {@link org.bukkit.scheduler.BukkitScheduler}.
@@ -23,7 +28,10 @@ public class TickingAnimation extends Animation implements Runnable {
      *
      * @param plugin the plugin to pass to the scheduler to register this task
      */
-    public TickingAnimation(@NotNull Plugin plugin) {
+    public TickingAnimation(@NotNull Plugin plugin,
+                            @Nullable String id,
+                            @NotNull List<Transition> transitions) {
+        super(id, transitions);
         this.plugin = plugin;
     }
 
