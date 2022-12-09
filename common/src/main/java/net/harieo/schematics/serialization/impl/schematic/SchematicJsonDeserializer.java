@@ -9,7 +9,6 @@ import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Blueprint;
 import net.harieo.schematics.serialization.Deserializer;
-import net.harieo.schematics.serialization.impl.coordinate.CoordinateJsonBlueprint;
 import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +19,8 @@ import java.util.stream.StreamSupport;
 
 /**
  * A deserializer from JSON format for {@link Schematic}.
+ *
+ * @param <T> the type of {@link Coordinate} used for the initial position.
  */
 public class SchematicJsonDeserializer<T extends Coordinate> implements Deserializer<Schematic, JsonObject> {
 

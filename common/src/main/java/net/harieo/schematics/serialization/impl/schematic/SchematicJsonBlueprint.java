@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link Blueprint} for the storage of {@link Schematic} to and from JSON.
+ *
+ * @param <T> the type of {@link Coordinate} used for the initial position.
  */
 public class SchematicJsonBlueprint<T extends Coordinate> extends Blueprint<Schematic, JsonObject> {
 

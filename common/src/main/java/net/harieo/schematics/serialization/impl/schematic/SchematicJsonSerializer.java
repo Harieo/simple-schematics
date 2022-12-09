@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A serializer to JSON format for {@link Schematic}.
+ *
+ * @param <T> the type of {@link Coordinate} used for the initial position.
  */
 public class SchematicJsonSerializer<T extends Coordinate> implements Serializer<Schematic, JsonObject> {
 
