@@ -2,6 +2,8 @@ package net.harieo.schematics.animation;
 
 /**
  * A single stage of an {@link Animation} which performs one task and a specific point.
+ *
+ * @apiNote This is a {@link Runnable} meaning the task is performed on the abstract {@link #run()} in the implementation.
  */
 public abstract class Transition implements Runnable {
 

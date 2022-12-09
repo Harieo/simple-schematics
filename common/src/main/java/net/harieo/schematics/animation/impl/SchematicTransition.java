@@ -1,5 +1,6 @@
-package net.harieo.schematics.animation;
+package net.harieo.schematics.animation.impl;
 
+import net.harieo.schematics.animation.Transition;
 import net.harieo.schematics.schematic.Schematic;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +22,9 @@ public class SchematicTransition extends Transition {
         this.schematic = schematic;
     }
 
+    /**
+     * Applies the {@link Schematic} with {@link Schematic#apply()}.
+     */
     @Override
     public void run() {
         schematic.apply();
