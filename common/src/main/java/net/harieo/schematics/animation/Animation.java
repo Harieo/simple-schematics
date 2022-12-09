@@ -1,6 +1,9 @@
 package net.harieo.schematics.animation;
 
+import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -11,6 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public abstract class Animation {
 
     // Static information
+    private final String id;
     private final List<Transition> transitions = new ArrayList<>();
 
     // Transient information
@@ -22,19 +26,36 @@ public abstract class Animation {
     /**
      * An animation with an ordered list of transitions.
      *
+     * @param id an optional identifier for this animation
      * @param orderedTransitions the ordered list of transitions
      */
-    public Animation(@NotNull List<Transition> orderedTransitions) {
+    public Animation(@Nullable String id, @NotNull List<Transition> orderedTransitions) {
+        this.id = id;
         this.transitions.addAll(orderedTransitions);
     }
 
     /**
      * An animation with an ordered array of transitions.
      *
+     * @param id an optional identifier for this animation
      * @param orderedTransitions the ordered array of transitions
      */
-    public Animation(@NotNull Transition... orderedTransitions) {
-        this(Arrays.asList(orderedTransitions));
+    public Animation(@Nullable String id, @NotNull Transition... orderedTransitions) {
+        this(id, Arrays.asList(orderedTransitions));
+    }
+
+    /**
+     * @return the optional id for this animation, if one is present
+     */
+    public Optional<String> getId() {
+        return Optional.ofNullable(id);
+    }
+
+    /**
+     * @return an unmodifiable list of all transitions for this animation
+     */
+    public @Unmodifiable List<Transition> getAllTransitions() {
+        return ImmutableList.copyOf(transitions);
     }
 
     /**

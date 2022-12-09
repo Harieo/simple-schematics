@@ -8,13 +8,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link Serializer} which serializes the base values for {@link Transition} then allows the addition of extra data
  * for the implementing subclass of {@link Transition}.
- *
- * @param <T> the type of {@link Transition} being serialized
  */
-public abstract class TransitionJsonSerializer<T extends Transition> implements Serializer<T, JsonObject> {
+public abstract class TransitionJsonSerializer implements Serializer<Transition, JsonObject> {
 
     @Override
-    public JsonObject serialize(@NotNull T transition) {
+    public JsonObject serialize(@NotNull Transition transition) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("milliseconds-before", transition.getMillisecondsBefore());
         jsonObject.addProperty("milliseconds-after", transition.getMillisecondsAfter());
@@ -28,6 +26,6 @@ public abstract class TransitionJsonSerializer<T extends Transition> implements 
      * @param transition the transition being serialized
      * @param serializedObject the serialized object containing the base fields of {@link Transition}
      */
-    public abstract void addExtraData(@NotNull T transition, @NotNull JsonObject serializedObject);
+    public abstract void addExtraData(@NotNull Transition transition, @NotNull JsonObject serializedObject);
 
 }

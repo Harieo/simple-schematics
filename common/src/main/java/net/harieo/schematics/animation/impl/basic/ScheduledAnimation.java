@@ -1,8 +1,9 @@
-package net.harieo.schematics.animation.impl;
+package net.harieo.schematics.animation.impl.basic;
 
 import net.harieo.schematics.animation.Animation;
 import net.harieo.schematics.animation.Transition;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -15,15 +16,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class ScheduledAnimation extends Animation implements Runnable {
 
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private final transient ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private transient ScheduledFuture<?> scheduledFuture;
 
-    public ScheduledAnimation(@NotNull List<Transition> transitions) {
-        super(transitions);
+    public ScheduledAnimation(@Nullable String id, @NotNull List<Transition> transitions) {
+        super(id, transitions);
     }
 
-    public ScheduledAnimation(@NotNull Transition... transitions) {
-        super(transitions);
+    public ScheduledAnimation(@Nullable String id, @NotNull Transition... transitions) {
+        super(id, transitions);
     }
 
     /**

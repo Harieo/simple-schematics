@@ -7,7 +7,6 @@ import net.harieo.schematics.modification.RelativeModification;
 import net.harieo.schematics.position.Coordinate;
 import net.harieo.schematics.schematic.Schematic;
 import net.harieo.schematics.serialization.Serializer;
-import net.harieo.schematics.serialization.impl.coordinate.CoordinateJsonBlueprint;
 import net.harieo.schematics.serialization.impl.modification.RelativeModificationJsonBlueprint;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,5 +1,7 @@
 package net.harieo.schematics.animation;
 
+import net.harieo.schematics.serialization.Serializer;
+
 /**
  * A single stage of an {@link Animation} which performs one task and a specific point.
  *

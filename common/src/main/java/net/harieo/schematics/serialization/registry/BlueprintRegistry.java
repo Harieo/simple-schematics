@@ -3,11 +3,13 @@ package net.harieo.schematics.serialization.registry;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.harieo.schematics.serialization.Blueprint;
+import net.harieo.schematics.serialization.Serializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -65,4 +67,5 @@ public class BlueprintRegistry<T, V> {
     public @Unmodifiable Set<Blueprint<? extends T, V>> getBlueprints() {
         return ImmutableSet.copyOf(blueprints);
     }
+
 }
