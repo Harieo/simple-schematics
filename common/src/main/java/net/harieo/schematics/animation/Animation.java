@@ -14,7 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public abstract class Animation {
 
     // Static information
-    private final String id;
+    private String id;
     private final List<Transition> transitions = new ArrayList<>();
 
     // Transient information
@@ -52,10 +52,46 @@ public abstract class Animation {
     }
 
     /**
+     * Sets the id of this animation.
+     *
+     * @param id the id to be set
+     */
+    public void setId(@Nullable String id) {
+        this.id = id;
+    }
+
+    /**
      * @return an unmodifiable list of all transitions for this animation
      */
     public @Unmodifiable List<Transition> getAllTransitions() {
         return ImmutableList.copyOf(transitions);
+    }
+
+    /**
+     * Adds a transition to the list of transitions.
+     *
+     * @param transition the transition to add
+     */
+    public void addTransition(@NotNull Transition transition) {
+        transitions.add(transition);
+    }
+
+    /**
+     * Removes a transition from the list of transitions.
+     *
+     * @param transition the transition to remove
+     */
+    public void removeTransition(@NotNull Transition transition) {
+        transitions.remove(transition);
+    }
+
+    /**
+     * Removes a transition from the list of transitions by its index.
+     *
+     * @param index the index of the transition in the list to remove
+     */
+    public void removeTransition(int index) {
+        transitions.remove(index);
     }
 
     /**
