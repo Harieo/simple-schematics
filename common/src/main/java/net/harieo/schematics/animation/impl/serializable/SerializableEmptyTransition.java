@@ -2,6 +2,7 @@ package net.harieo.schematics.animation.impl.serializable;
 
 import com.google.gson.JsonObject;
 import net.harieo.schematics.animation.Transition;
+import net.harieo.schematics.animation.impl.basic.EmptyTransition;
 import net.harieo.schematics.animation.serialization.TransitionJsonSerializable;
 import net.harieo.schematics.serialization.Serializer;
 import net.harieo.schematics.serialization.impl.transition.TransitionJsonSerializer;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A {@link Transition} which has no action when run to add a delay to the animation sequence.
  */
-public class SerializableEmptyTransition extends Transition implements TransitionJsonSerializable {
+public class SerializableEmptyTransition extends EmptyTransition implements TransitionJsonSerializable {
 
     // There are no configurable or overridable values, so this can just be constructed
     private final EmptyTransitionJsonSerializer emptyTransitionJsonSerializer = new EmptyTransitionJsonSerializer();
@@ -24,11 +25,6 @@ public class SerializableEmptyTransition extends Transition implements Transitio
      */
     public SerializableEmptyTransition(long millisecondsBefore, long millisecondsAfter) {
         super(millisecondsBefore, millisecondsAfter);
-    }
-
-    @Override
-    public void run() {
-        // No action taken
     }
 
     @Override
