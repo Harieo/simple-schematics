@@ -40,6 +40,9 @@
 *.iml
 *.ipr
 
+# Maven output (build it yourself)
+**/target/*
+
 # CMake
 cmake-build-*/
 
