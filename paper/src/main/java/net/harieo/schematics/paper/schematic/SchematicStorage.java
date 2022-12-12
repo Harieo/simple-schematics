@@ -141,6 +141,13 @@ public class SchematicStorage {
     }
 
     /**
+     * @return the schematic blueprint for deserializing schematics to JSON
+     */
+    public Blueprint<Schematic, JsonObject> getSchematicJsonBlueprint() {
+        return schematicJsonBlueprint;
+    }
+
+    /**
      * @return an immutable set of all cached schematics
      */
     public @Unmodifiable Set<Schematic> getSchematics() {

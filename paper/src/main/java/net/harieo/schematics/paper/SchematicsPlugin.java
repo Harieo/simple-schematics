@@ -1,6 +1,8 @@
 package net.harieo.schematics.paper;
 
 import co.aikar.commands.PaperCommandManager;
+import net.harieo.schematics.paper.animation.AnimationStorage;
+import net.harieo.schematics.paper.animation.TickingAnimationDeserializer;
 import net.harieo.schematics.paper.command.CommandPosition;
 import net.harieo.schematics.paper.command.schematic.SchematicCommand;
 import net.harieo.schematics.paper.command.transition.TransitionIntentRegistry;
@@ -26,12 +28,14 @@ public class SchematicsPlugin extends JavaPlugin {
 
     private SchematicToolConfiguration schematicToolConfiguration;
     private SchematicStorage schematicStorage;
+    private AnimationStorage animationStorage;
     private TransitionIntentRegistry transitionIntentRegistry;
 
     @Override
     public void onEnable() {
         this.schematicToolConfiguration = new SchematicToolConfiguration();
         this.schematicStorage = new SchematicStorage(new BukkitJsonBlueprintRegistry());
+        this.animationStorage = new AnimationStorage(new TickingAnimationDeserializer(this, schematicStorage.getSchematicJsonBlueprint()));
 
         try {
             schematicToolConfiguration.load(this);
@@ -83,6 +87,10 @@ public class SchematicsPlugin extends JavaPlugin {
 
     public SchematicStorage getSchematicStorage() {
         return schematicStorage;
+    }
+
+    public AnimationStorage getAnimationStorage() {
+        return animationStorage;
     }
 
     public TransitionIntentRegistry getTransitionIntentRegistry() {

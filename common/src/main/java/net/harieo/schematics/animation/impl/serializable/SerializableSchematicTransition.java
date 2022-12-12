@@ -42,11 +42,11 @@ public class SerializableSchematicTransition<T extends Coordinate> extends Schem
         return schematicTransitionJsonSerializer;
     }
 
-    public class SchematicTransitionJsonSerializer extends TransitionJsonSerializer {
+    public static class SchematicTransitionJsonSerializer extends TransitionJsonSerializer {
 
-        private final SchematicJsonSerializer<T> schematicJsonSerializer;
+        private final Serializer<Schematic, JsonObject> schematicJsonSerializer;
 
-        public SchematicTransitionJsonSerializer(SchematicJsonSerializer<T> schematicJsonSerializer) {
+        public SchematicTransitionJsonSerializer(Serializer<Schematic, JsonObject> schematicJsonSerializer) {
             this.schematicJsonSerializer = schematicJsonSerializer;
         }
 
