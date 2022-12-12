@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.harieo.schematics.serialization.impl.animation.AnimationJsonSerializer;
 
 /**
  * The {@link JavaPlugin} which allows this library to be loaded as a standalone plugin.
@@ -35,7 +36,8 @@ public class SchematicsPlugin extends JavaPlugin {
     public void onEnable() {
         this.schematicToolConfiguration = new SchematicToolConfiguration();
         this.schematicStorage = new SchematicStorage(new BukkitJsonBlueprintRegistry());
-        this.animationStorage = new AnimationStorage(new TickingAnimationDeserializer(this, schematicStorage.getSchematicJsonBlueprint()));
+        this.animationStorage = new AnimationStorage(new AnimationJsonSerializer(),
+                new TickingAnimationDeserializer(this, schematicStorage.getSchematicJsonBlueprint()));
 
         try {
             schematicToolConfiguration.load(this);
@@ -75,6 +77,13 @@ public class SchematicsPlugin extends JavaPlugin {
                 getLogger().info("Successfully saved all cached schematics.");
             } else {
                 getLogger().warning("Failed to save all cached schematics.");
+            }
+
+            getLogger().info("Saving animations to file...");
+            if (animationStorage.saveAll(this, true)) {
+                getLogger().info("Saved all cached animations.");
+            } else {
+                getLogger().warning("Failed to save all cached animations.");
             }
         } catch (IOException e) {
             e.printStackTrace();
