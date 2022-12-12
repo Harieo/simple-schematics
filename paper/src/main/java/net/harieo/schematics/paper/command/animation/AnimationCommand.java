@@ -50,6 +50,51 @@ public class AnimationCommand extends BaseCommand {
                 + ChatColor.GRAY + "to add transitions.");
     }
 
+    @Subcommand("list|info|listtransitions|transitions")
+    @CommandPermission("schematics.animation.transition")
+    public void listTransitions(Player player) {
+        persistence.getAnimation(player.getUniqueId()).ifPresentOrElse(animation -> {
+            // Show animation id
+            player.sendMessage(ChatColor.GREEN + "Animation Id: "
+                    + animation.getId().orElse(ChatColor.YELLOW + "[Not Set]"));
+
+            // List transitions
+            for (Transition transition : animation.getAllTransitions()) {
+                StringBuilder builder = new StringBuilder("    ");
+                if (transition.hasTimeBefore()) {
+                    builder.append(ChatColor.DARK_AQUA);
+                    builder.append(formatMillisecondsAsSeconds(transition.getMillisecondsBefore()));
+                    builder.append(" -> ");
+                }
+
+                builder.append(ChatColor.LIGHT_PURPLE);
+                builder.append(transition.getId().orElse("Unknown Transition"));
+
+                if (transition.hasTimeAfter()) {
+                    builder.append(ChatColor.BLUE);
+                    builder.append(" -> ");
+                    builder.append(formatMillisecondsAsSeconds(transition.getMillisecondsAfter()));
+                }
+                player.sendMessage(builder.toString());
+            }
+
+            // Add extra help message for how to add transitions
+            player.sendMessage(ChatColor.GRAY + "    To add another transition, use "
+                    + ChatColor.YELLOW + "/animation transition <type> [args...]");
+        }, () -> player.sendMessage(ChatColor.RED + "You have not yet created an animation."));
+    }
+
+    /**
+     * Formats an amount of milliseconds to a user-readable {@link String} of seconds.
+     *
+     * @param milliseconds the amount of milliseconds
+     * @return the user-readable amount of seconds
+     */
+    private String formatMillisecondsAsSeconds(long milliseconds) {
+        long seconds = milliseconds / 1000;
+        return "[" + seconds + " seconds" + "]";
+    }
+
     @Subcommand("transition|createtransition|addtransition")
     @CommandCompletion("@transitions")
     @CommandPermission("schematics.animation.transition")
