@@ -27,7 +27,7 @@ public class AnimationCommand extends BaseCommand {
     @Subcommand("create|new")
     @CommandPermission("schematics.animation.create")
     public void createAnimation(Player player,
-                                @Name("type") @Default(value = "ticking") String animationType,
+                                @Name("type") @Values("ticking|scheduled") @Default(value = "ticking") String animationType,
                                 @Name("id") @Optional String animationId) {
         Animation animation;
         switch (animationType.toLowerCase(Locale.ROOT)) {
@@ -43,6 +43,12 @@ public class AnimationCommand extends BaseCommand {
         player.sendMessage(ChatColor.GREEN + "The " + animationType + " has been created.");
         player.sendMessage(ChatColor.GRAY + "Use " + ChatColor.YELLOW + "/animation transition ... "
                 + ChatColor.GRAY + "to add transitions.");
+    }
+
+    @Subcommand("transition|createtransition|addtransition")
+    @CommandPermission("schematics.animation.transition")
+    public void addTransition(Player player) {
+        // TODO
     }
 
 }
