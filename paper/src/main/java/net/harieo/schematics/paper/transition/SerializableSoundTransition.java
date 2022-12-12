@@ -28,7 +28,7 @@ public class SerializableSoundTransition extends SoundTransition implements Tran
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      * @throws NullPointerException if the provided {@link Location} does not have a {@link World} present.
      */
-    public SerializableSoundTransition(@NotNull Sound sound, @NotNull Location location,
+    public SerializableSoundTransition(@NotNull String sound, @NotNull Location location,
                                        long millisecondsBefore, long millisecondsAfter) {
         super(sound, location, millisecondsBefore, millisecondsAfter);
     }
@@ -54,7 +54,7 @@ public class SerializableSoundTransition extends SoundTransition implements Tran
         @Override
         public void addExtraData(@NotNull Transition transition, @NotNull JsonObject serializedObject) {
             if (transition instanceof SoundTransition soundTransition) {
-                serializedObject.addProperty("sound", soundTransition.getSound().getKey().asString());
+                serializedObject.addProperty("sound", soundTransition.getSound());
                 serializedObject.add("location", bukkitJsonCoordinateBlueprint.serialize(
                         new BukkitCoordinate(soundTransition.getLocation())));
                 serializedObject.addProperty("volume", soundTransition.getVolume());

@@ -3,6 +3,7 @@ package net.harieo.schematics.paper;
 import co.aikar.commands.PaperCommandManager;
 import net.harieo.schematics.paper.command.CommandPosition;
 import net.harieo.schematics.paper.command.schematic.SchematicCommand;
+import net.harieo.schematics.paper.command.transition.TransitionIntentRegistry;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.paper.tool.SchematicToolConfiguration;
 import net.harieo.schematics.paper.modification.registry.BukkitJsonBlueprintRegistry;
@@ -25,6 +26,7 @@ public class SchematicsPlugin extends JavaPlugin {
 
     private SchematicToolConfiguration schematicToolConfiguration;
     private SchematicStorage schematicStorage;
+    private TransitionIntentRegistry transitionIntentRegistry;
 
     @Override
     public void onEnable() {
@@ -38,6 +40,8 @@ public class SchematicsPlugin extends JavaPlugin {
             e.printStackTrace();
         }
 
+        this.transitionIntentRegistry = new TransitionIntentRegistry(this); // Registers default transition intents
+
         PaperCommandManager commandManager = new PaperCommandManager(this);
         commandManager.getCommandCompletions().registerCompletion("positions",
                 handler -> Arrays.stream(CommandPosition.values())
@@ -50,6 +54,7 @@ public class SchematicsPlugin extends JavaPlugin {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toSet()));
+        transitionIntentRegistry.registerCommandCompletions("transitions", commandManager);
 
         SchematicCommand schematicCommand = new SchematicCommand(this);
         commandManager.registerCommand(schematicCommand);
@@ -78,6 +83,10 @@ public class SchematicsPlugin extends JavaPlugin {
 
     public SchematicStorage getSchematicStorage() {
         return schematicStorage;
+    }
+
+    public TransitionIntentRegistry getTransitionIntentRegistry() {
+        return transitionIntentRegistry;
     }
 
 }

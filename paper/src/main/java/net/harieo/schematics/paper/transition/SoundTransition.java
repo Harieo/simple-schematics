@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class SoundTransition extends Transition {
 
-    private final Sound sound;
+    private final String sound;
     private final Location location;
 
     private float volume = 1F;
@@ -35,7 +35,7 @@ public class SoundTransition extends Transition {
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      * @throws NullPointerException if the provided {@link Location} does not have a {@link World} present.
      */
-    public SoundTransition(@NotNull Sound sound, @NotNull Location location, long millisecondsBefore, long millisecondsAfter) {
+    public SoundTransition(@NotNull String sound, @NotNull Location location, long millisecondsBefore, long millisecondsAfter) {
         super(millisecondsBefore, millisecondsAfter);
         Objects.requireNonNull(location.getWorld(), "Location must be based in a World");
         this.sound = sound;
@@ -58,7 +58,7 @@ public class SoundTransition extends Transition {
     /**
      * @return the sound which will be played
      */
-    public Sound getSound() {
+    public String getSound() {
         return sound;
     }
 

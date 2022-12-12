@@ -3,8 +3,11 @@ package net.harieo.schematics.paper.command.animation;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.harieo.schematics.animation.Animation;
+import net.harieo.schematics.animation.Transition;
 import net.harieo.schematics.animation.impl.basic.ScheduledAnimation;
+import net.harieo.schematics.paper.SchematicsPlugin;
 import net.harieo.schematics.paper.animation.TickingAnimation;
+import net.harieo.schematics.paper.command.transition.TransitionIntentRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -18,10 +21,12 @@ public class AnimationCommand extends BaseCommand {
 
     private final Plugin plugin;
     private final AnimationCommandPersistence persistence;
+    private final TransitionIntentRegistry transitionIntentRegistry;
 
-    public AnimationCommand(@NotNull Plugin plugin) {
+    public AnimationCommand(@NotNull SchematicsPlugin plugin) {
         this.plugin = plugin;
         this.persistence = new AnimationCommandPersistence(plugin);
+        this.transitionIntentRegistry = plugin.getTransitionIntentRegistry();
     }
 
     @Subcommand("create|new")
@@ -46,9 +51,19 @@ public class AnimationCommand extends BaseCommand {
     }
 
     @Subcommand("transition|createtransition|addtransition")
+    @CommandCompletion("@transitions")
     @CommandPermission("schematics.animation.transition")
-    public void addTransition(Player player) {
-        // TODO
+    public void addTransition(Player player,
+                              @Name("transition type") @Values("@transitions") String transitionId,
+                              @Name("transition args") String[] args) {
+        transitionIntentRegistry.getIntent(transitionId).ifPresentOrElse(transitionIntent -> {
+            try {
+                Transition transition = transitionIntent.createTransition(player, args);
+                persistence.addTransition(player.getUniqueId(), transition);
+            } catch (IllegalArgumentException e) {
+                player.sendMessage(ChatColor.RED + e.getMessage());
+            }
+        }, () -> player.sendMessage(ChatColor.RED + "Unknown transition: " + transitionId));
     }
 
 }
