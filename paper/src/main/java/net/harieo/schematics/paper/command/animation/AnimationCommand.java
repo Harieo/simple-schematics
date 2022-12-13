@@ -6,7 +6,7 @@ import java.io.IOException;
 import net.harieo.schematics.animation.Animation;
 import net.harieo.schematics.animation.Transition;
 import net.harieo.schematics.animation.impl.basic.ScheduledAnimation;
-import net.harieo.schematics.paper.SchematicsPlugin;
+import net.harieo.schematics.paper.SimpleSchematics;
 import net.harieo.schematics.paper.animation.AnimationStorage;
 import net.harieo.schematics.paper.animation.TickingAnimation;
 import net.harieo.schematics.paper.command.transition.TransitionIntentRegistry;
@@ -28,7 +28,7 @@ public class AnimationCommand extends BaseCommand {
 	private final AnimationCommandPersistence persistence;
 	private final TransitionIntentRegistry transitionIntentRegistry;
 
-	public AnimationCommand(@NotNull SchematicsPlugin plugin) {
+	public AnimationCommand(@NotNull SimpleSchematics plugin) {
 		this.plugin = plugin;
 		this.animationStorage = plugin.getAnimationStorage();
 		this.persistence = new AnimationCommandPersistence(plugin);

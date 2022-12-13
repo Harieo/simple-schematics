@@ -1,4 +1,4 @@
-main: net.harieo.schematics.paper.SchematicsPlugin
+main: net.harieo.schematics.paper.SimpleSchematics
 name: SimpleSchematics
 version: 1.0.0
 author: Harieo

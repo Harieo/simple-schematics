@@ -24,10 +24,10 @@ import net.harieo.schematics.serialization.impl.animation.AnimationJsonSerialize
 
 /**
  * The {@link JavaPlugin} which allows this library to be loaded as a standalone plugin.
- *
- * @apiNote To access this internal class, please use {@link JavaPlugin#getPlugin(Class)}.
  */
-public class SchematicsPlugin extends JavaPlugin {
+public class SimpleSchematics extends JavaPlugin {
+
+    private static SimpleSchematics INSTANCE;
 
     private SchematicToolConfiguration schematicToolConfiguration;
     private SchematicStorage schematicStorage;
@@ -36,6 +36,8 @@ public class SchematicsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        INSTANCE = this;
+
         this.schematicToolConfiguration = new SchematicToolConfiguration();
         this.schematicStorage = new SchematicStorage(new BukkitJsonBlueprintRegistry());
         this.animationStorage = new AnimationStorage(new AnimationJsonSerializer(),
@@ -114,6 +116,10 @@ public class SchematicsPlugin extends JavaPlugin {
 
     public TransitionIntentRegistry getTransitionIntentRegistry() {
         return transitionIntentRegistry;
+    }
+
+    public static SimpleSchematics get() {
+        return INSTANCE;
     }
 
 }

@@ -1,11 +1,9 @@
 package net.harieo.schematics.paper.command.transition;
 
-import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.google.common.collect.Sets;
 import net.harieo.schematics.animation.Transition;
-import net.harieo.schematics.paper.SchematicsPlugin;
-import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint;
+import net.harieo.schematics.paper.SimpleSchematics;
 import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint.BukkitJsonCoordinateSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +24,7 @@ public class TransitionIntentRegistry {
      *
      * @param plugin the schematic plugin
      */
-    public TransitionIntentRegistry(@NotNull SchematicsPlugin plugin) {
+    public TransitionIntentRegistry(@NotNull SimpleSchematics plugin) {
         this.register = Sets.newHashSet(new SoundTransitionIntent(),
                 new EmptyTransitionIntent(),
                 new SchematicTransitionIntent(plugin.getSchematicStorage(), new BukkitJsonCoordinateSerializer()));

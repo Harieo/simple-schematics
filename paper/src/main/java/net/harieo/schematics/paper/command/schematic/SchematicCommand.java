@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.harieo.schematics.modification.Modification;
 import net.harieo.schematics.modification.RelativeModification;
-import net.harieo.schematics.paper.SchematicsPlugin;
+import net.harieo.schematics.paper.SimpleSchematics;
 import net.harieo.schematics.paper.command.CommandPosition;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.paper.modification.impl.BlockModification;
@@ -29,11 +29,11 @@ import java.util.stream.Collectors;
 @CommandAlias("schematic|schematics|simpleschematics|simpleschematic|schema")
 public class SchematicCommand extends BaseCommand {
 
-    private final SchematicsPlugin plugin;
+    private final SimpleSchematics plugin;
 
     private final SchematicCommandPersistence persistence = new SchematicCommandPersistence();
 
-    public SchematicCommand(@NotNull SchematicsPlugin plugin) {
+    public SchematicCommand(@NotNull SimpleSchematics plugin) {
         this.plugin = plugin;
     }
 
