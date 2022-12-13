@@ -176,6 +176,7 @@ public class AnimationCommand extends BaseCommand {
 			if (animation.isActivated()) {
 				player.sendMessage(ChatColor.YELLOW + "That animation is currently activated.");
 			} else {
+				animation.reset();
 				animation.activate();
 				player.sendMessage(ChatColor.GREEN + "The animation is now running...");
 			}
