@@ -16,4 +16,8 @@ public abstract class TransitionJsonDeserializer implements Deserializer<Transit
 
 	public abstract Transition deserializeToSpecific(@NotNull JsonObject serializedObject, long millisecondsBefore, long millisecondsAfter);
 
+	public String parseType(@NotNull JsonObject serializedObject) {
+		return serializedObject.get("type").getAsString();
+	}
+
 }

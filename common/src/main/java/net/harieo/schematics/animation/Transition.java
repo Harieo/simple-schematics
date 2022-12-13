@@ -1,6 +1,7 @@
 package net.harieo.schematics.animation;
 
 import net.harieo.schematics.serialization.Serializer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
  */
 public abstract class Transition implements Runnable {
 
-    private final String id;
+    private final String type;
     private final long millisecondsBefore;
     private final long millisecondsAfter;
 
@@ -20,21 +21,21 @@ public abstract class Transition implements Runnable {
      * A transition with an amount of milliseconds before it should run and an amount of milliseconds before a proceeding
      * transition should run.
      *
-     * @param id an optional id to identify the type of implementing transition
+     * @param type a unique identifier for this type of transition
      * @param millisecondsBefore the milliseconds before this transition should run
      * @param millisecondsAfter the milliseconds before the next transition should run proceeding this one
      */
-    public Transition(@Nullable String id, long millisecondsBefore, long millisecondsAfter) {
-        this.id = id;
+    public Transition(@NotNull String type, long millisecondsBefore, long millisecondsAfter) {
+        this.type = type;
         this.millisecondsBefore = millisecondsBefore;
         this.millisecondsAfter = millisecondsAfter;
     }
 
     /**
-     * @return the id, if one has been provided
+     * @return the unique identifier for this type of transition
      */
-    public Optional<String> getId() {
-        return Optional.ofNullable(id);
+    public String getType() {
+        return type;
     }
 
     /**

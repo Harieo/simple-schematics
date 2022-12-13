@@ -25,8 +25,12 @@ public class SchematicTransitionDeserializer extends TransitionJsonDeserializer 
 
 	@Override
 	public boolean isValidObject(@NotNull JsonObject serializedObject) {
+		if (!parseType(serializedObject).equals(SchematicTransition.TYPE)) {
+			return false;
+		}
+
 		JsonElement element = serializedObject.get("schematic");
-		if (element.isJsonObject()) {
+		if (element != null && element.isJsonObject()) {
 			return schematicJsonDeserializer.isValidObject(element.getAsJsonObject());
 		} else {
 			return false;

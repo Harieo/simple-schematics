@@ -16,7 +16,7 @@ public class EmptyTransitionDeserializer extends TransitionJsonDeserializer {
 
 	@Override
 	public boolean isValidObject(@NotNull JsonObject serializedObject) {
-		return true;
+		return parseType(serializedObject).equalsIgnoreCase(EmptyTransition.TYPE);
 	}
 
 }

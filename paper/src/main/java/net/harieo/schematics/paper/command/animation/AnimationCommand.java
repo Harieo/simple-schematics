@@ -63,9 +63,21 @@ public class AnimationCommand extends BaseCommand {
 		player.sendMessage(ChatColor.RED + "Set the id of your animation to " + animationId + ".");
 	}
 
-	@Subcommand("list|info|listtransitions|transitions")
-	@CommandPermission("schematics.animation.create")
+	@Subcommand("list|listanimations|animations")
+	@CommandPermission("schematics.animation.list")
 	@Default
+	public void listAnimations(Player player) {
+		animationStorage.getAnimations().forEach(animation -> player.sendMessage(
+				ChatColor.YELLOW + animation.getId().orElse("Unknown Animation")
+						+ ChatColor.GRAY + " ("
+						+ animation.getAllTransitions().size() + " transitions, "
+						+ (animation.isActivated() ? ChatColor.GREEN + "running" : ChatColor.RED + "not running")
+						+ ChatColor.GRAY + ")"
+		));
+	}
+
+	@Subcommand("transitions|listtransitions")
+	@CommandPermission("schematics.animation.create")
 	public void listTransitions(Player player) {
 		persistence.getAnimation(player.getUniqueId()).ifPresentOrElse(animation -> {
 			// Show animation id
@@ -88,7 +100,7 @@ public class AnimationCommand extends BaseCommand {
 				}
 
 				builder.append(ChatColor.LIGHT_PURPLE);
-				builder.append(transition.getId().orElse("Unknown Transition"));
+				builder.append(transition.getType());
 
 				if (transition.hasTimeAfter()) {
 					builder.append(ChatColor.BLUE);
@@ -154,6 +166,20 @@ public class AnimationCommand extends BaseCommand {
 						ChatColor.RED + "An error occurred saving animations to file. Check console for details.");
 			}
 		}, () -> player.sendMessage(ChatColor.RED + "You are not creating an animation."));
+	}
+
+	@Subcommand("play|start|run")
+	@CommandCompletion("@animations")
+	@CommandPermission("schematics.animation.play")
+	public void playAnimation(Player player, @Name("animation") @Values("@animations") String animationId) {
+		animationStorage.getAnimation(animationId).ifPresentOrElse(animation -> {
+			if (animation.isActivated()) {
+				player.sendMessage(ChatColor.YELLOW + "That animation is currently activated.");
+			} else {
+				animation.activate();
+				player.sendMessage(ChatColor.GREEN + "The animation is now running...");
+			}
+		}, () -> player.sendMessage(ChatColor.RED + "No animation with id '" + animationId + "' exists."));
 	}
 
 }

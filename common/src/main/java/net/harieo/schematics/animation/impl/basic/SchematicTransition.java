@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SchematicTransition extends Transition {
 
+    public static final String TYPE = "schematic";
+
     private final Schematic schematic;
 
     /**
@@ -19,7 +21,7 @@ public class SchematicTransition extends Transition {
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      */
     public SchematicTransition(@NotNull Schematic schematic, long millisecondsBefore, long millisecondsAfter) {
-        super("schematic", millisecondsBefore, millisecondsAfter);
+        super(TYPE, millisecondsBefore, millisecondsAfter);
         this.schematic = schematic;
     }
 

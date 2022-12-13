@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NotDirectoryException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import net.harieo.schematics.animation.Animation;
@@ -51,6 +52,18 @@ public class AnimationStorage {
 	 */
 	public @Unmodifiable Set<Animation> getAnimations() {
 		return ImmutableSet.copyOf(animations);
+	}
+
+	/**
+	 * Finds a cached animation based on its id.
+	 *
+	 * @param animationId the id of the animation to find
+	 * @return the cached animation, if a matching animation is present
+	 */
+	public Optional<Animation> getAnimation(@NotNull String animationId) {
+		return getAnimations().stream()
+				.filter(animation -> animation.getId().map(id -> id.equalsIgnoreCase(animationId)).orElse(false))
+				.findAny();
 	}
 
 	/**
@@ -127,6 +140,15 @@ public class AnimationStorage {
 
 		boolean savedAll = true;
 		for (Animation animation : animations) {
+			// Make sure serialization throws no exceptions before deleting the file
+			JsonObject serializedAnimation;
+			try {
+				serializedAnimation = animationJsonSerializer.serialize(animation);
+			} catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+
 			File animationFile = new File(animationDirectory, fileNamingFunction.apply(animation));
 			if (animationFile.exists()) {
 				if (overwrite && !animationFile.delete()) {
@@ -137,10 +159,11 @@ public class AnimationStorage {
 				}
 			}
 
-			JsonObject serializedAnimation = animationJsonSerializer.serialize(animation);
 			try (FileWriter writer = new FileWriter(animationFile)) {
 				writer.write(gson.toJson(serializedAnimation));
 			}
+
+			animation.reset(); // Reset transient values to reflect that this animation is now complete
 		}
 
 		return savedAll;

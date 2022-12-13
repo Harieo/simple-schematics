@@ -14,6 +14,7 @@ public abstract class TransitionJsonSerializer implements Serializer<Transition,
     @Override
     public JsonObject serialize(@NotNull Transition transition) {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", transition.getType());
         jsonObject.addProperty("milliseconds-before", transition.getMillisecondsBefore());
         jsonObject.addProperty("milliseconds-after", transition.getMillisecondsAfter());
         addExtraData(transition, jsonObject);

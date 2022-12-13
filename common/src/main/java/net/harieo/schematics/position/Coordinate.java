@@ -79,9 +79,9 @@ public class Coordinate {
      * @return the vector from this coordinate to the relative coordinate
      */
     public Vector getRelativeVector(@NotNull Coordinate relativeCoordinate) {
-        double x = getX() - relativeCoordinate.getX();
-        double y = getY() - relativeCoordinate.getY();
-        double z = getZ() - relativeCoordinate.getZ();
+        double x = relativeCoordinate.getX() - getX();
+        double y = relativeCoordinate.getY() - getY();
+        double z = relativeCoordinate.getZ() - getZ();
         return new Vector(x, y, z);
     }
 

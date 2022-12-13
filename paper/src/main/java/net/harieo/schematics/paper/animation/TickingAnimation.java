@@ -59,7 +59,7 @@ public class TickingAnimation extends Animation implements Runnable {
             return;
         }
 
-        tick(500);
+        tick(50);
     }
 
 }

@@ -18,6 +18,8 @@ import java.util.Set;
  */
 public class SoundTransition extends Transition {
 
+    public static final String TYPE = "sound";
+
     private final String sound;
     private final Location location;
 
@@ -36,7 +38,7 @@ public class SoundTransition extends Transition {
      * @throws NullPointerException if the provided {@link Location} does not have a {@link World} present.
      */
     public SoundTransition(@NotNull String sound, @NotNull Location location, long millisecondsBefore, long millisecondsAfter) {
-        super("sound", millisecondsBefore, millisecondsAfter);
+        super(TYPE, millisecondsBefore, millisecondsAfter);
         Objects.requireNonNull(location.getWorld(), "Location must be based in a World");
         this.sound = sound;
         this.location = location;

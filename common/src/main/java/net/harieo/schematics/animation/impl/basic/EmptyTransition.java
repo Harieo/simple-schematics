@@ -7,6 +7,8 @@ import net.harieo.schematics.animation.Transition;
  */
 public class EmptyTransition extends Transition {
 
+    public static final String TYPE = "empty";
+
     /**
      * A transition with an amount of milliseconds before it should run and an amount of milliseconds before a proceeding
      * transition should run.
@@ -15,7 +17,7 @@ public class EmptyTransition extends Transition {
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      */
     public EmptyTransition(long millisecondsBefore, long millisecondsAfter) {
-        super("empty", millisecondsBefore, millisecondsAfter);
+        super(TYPE, millisecondsBefore, millisecondsAfter);
     }
 
     @Override

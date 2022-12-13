@@ -1,6 +1,7 @@
 package net.harieo.schematics.paper;
 
 import co.aikar.commands.PaperCommandManager;
+import net.harieo.schematics.animation.Animation;
 import net.harieo.schematics.paper.animation.AnimationStorage;
 import net.harieo.schematics.paper.animation.TickingAnimationDeserializer;
 import net.harieo.schematics.paper.command.CommandPosition;
@@ -43,6 +44,7 @@ public class SchematicsPlugin extends JavaPlugin {
         try {
             schematicToolConfiguration.load(this);
             schematicStorage.load(this);
+            animationStorage.load(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,6 +60,12 @@ public class SchematicsPlugin extends JavaPlugin {
         commandManager.getCommandCompletions().registerCompletion("schematics",
                 handler -> schematicStorage.getSchematics().stream()
                         .map(Schematic::getId)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toSet()));
+        commandManager.getCommandCompletions().registerCompletion("animations",
+                handler -> animationStorage.getAnimations().stream()
+                        .map(Animation::getId)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toSet()));

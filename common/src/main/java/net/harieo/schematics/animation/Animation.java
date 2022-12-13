@@ -32,6 +32,7 @@ public abstract class Animation {
     public Animation(@Nullable String id, @NotNull List<Transition> orderedTransitions) {
         this.id = id;
         this.transitions.addAll(orderedTransitions);
+        reset();
     }
 
     /**
@@ -149,6 +150,8 @@ public abstract class Animation {
      * @return true if there is a new transition, or false if the queue is empty
      */
     public boolean nextTransition() {
+        this.millisecondsToCurrentTransition = 0;
+
         Transition nextTransition = transitionQueue.poll();
         if (nextTransition != null) {
             currentTransition = nextTransition;
@@ -180,13 +183,15 @@ public abstract class Animation {
     }
 
     /**
-     * Resets and re-populates this animation queue.
+     * Resets and re-populates this animation queue. Does nothing if there are no transitions.
      */
     public void reset() {
-        transitionQueue = new ArrayBlockingQueue<>(transitions.size());
-        transitionQueue.addAll(transitions);
-        currentTransition = null;
-        currentTransitionRun = false;
+        if (!transitions.isEmpty()) { // Queue will not accept a size of 0
+            transitionQueue = new ArrayBlockingQueue<>(transitions.size());
+            transitionQueue.addAll(transitions);
+            currentTransition = null;
+            currentTransitionRun = false;
+        }
     }
 
     /**
