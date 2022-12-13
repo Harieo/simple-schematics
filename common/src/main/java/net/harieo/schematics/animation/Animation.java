@@ -101,6 +101,14 @@ public abstract class Animation {
     public abstract void activate();
 
     /**
+     * Resets the animation then activates it.
+     */
+    public void resetAndActivate() {
+        reset();
+        activate();
+    }
+
+    /**
      * @return whether this animation is currently activated and running.
      */
     public abstract boolean isActivated();
