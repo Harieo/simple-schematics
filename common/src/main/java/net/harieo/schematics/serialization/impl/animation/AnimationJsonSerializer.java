@@ -36,6 +36,8 @@ public class AnimationJsonSerializer implements Serializer<Animation, JsonObject
         for (Transition transition : animation.getAllTransitions()) {
             if (transition instanceof TransitionJsonSerializable transitionJsonSerializable) {
                 transitionArray.add(transitionJsonSerializable.serialize(transition));
+            } else {
+                throw new IllegalStateException("Unserializable transition: " + transition.getId().orElse("Unknown"));
             }
         }
         object.add("transitions", transitionArray);

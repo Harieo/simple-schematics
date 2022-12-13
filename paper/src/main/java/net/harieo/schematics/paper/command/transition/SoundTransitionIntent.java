@@ -1,5 +1,6 @@
 package net.harieo.schematics.paper.command.transition;
 
+import net.harieo.schematics.paper.transition.SerializableSoundTransition;
 import net.harieo.schematics.paper.transition.SoundTransition;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public class SoundTransitionIntent extends TransitionIntent<SoundTransition> {
         }
 
         MillisecondData millisecondData = parseMillisecondData(arguments, 3);
-        SoundTransition soundTransition = new SoundTransition(soundId, player.getLocation(),
+        SoundTransition soundTransition = new SerializableSoundTransition(soundId, player.getLocation(),
                 millisecondData.millisecondsBefore(), millisecondData.millisecondsAfter());
         soundTransition.setVolume(volume);
         soundTransition.setPitch(pitch);

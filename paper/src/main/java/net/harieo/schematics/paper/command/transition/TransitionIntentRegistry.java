@@ -5,6 +5,8 @@ import co.aikar.commands.PaperCommandManager;
 import com.google.common.collect.Sets;
 import net.harieo.schematics.animation.Transition;
 import net.harieo.schematics.paper.SchematicsPlugin;
+import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint;
+import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint.BukkitJsonCoordinateSerializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -27,7 +29,7 @@ public class TransitionIntentRegistry {
     public TransitionIntentRegistry(@NotNull SchematicsPlugin plugin) {
         this.register = Sets.newHashSet(new SoundTransitionIntent(),
                 new EmptyTransitionIntent(),
-                new SchematicTransitionIntent(plugin.getSchematicStorage()));
+                new SchematicTransitionIntent(plugin.getSchematicStorage(), new BukkitJsonCoordinateSerializer()));
     }
 
     /**

@@ -19,7 +19,7 @@ public class SchematicTransition extends Transition {
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      */
     public SchematicTransition(@NotNull Schematic schematic, long millisecondsBefore, long millisecondsAfter) {
-        super(millisecondsBefore, millisecondsAfter);
+        super("schematic", millisecondsBefore, millisecondsAfter);
         this.schematic = schematic;
     }
 

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Locale;
 
-@Subcommand("animation|simpleanimation|animations|simpleanimations")
+@CommandAlias("animation|simpleanimation|animations|simpleanimations")
 public class AnimationCommand extends BaseCommand {
 
 	private final Plugin plugin;
@@ -51,7 +51,7 @@ public class AnimationCommand extends BaseCommand {
 		}
 
 		persistence.setAnimation(player.getUniqueId(), animation);
-		player.sendMessage(ChatColor.GREEN + "The " + animationType + " has been created.");
+		player.sendMessage(ChatColor.GREEN + "The " + animationType + " animation has been created.");
 		player.sendMessage(ChatColor.GRAY + "Use " + ChatColor.YELLOW + "/animation transition ... "
 				+ ChatColor.GRAY + "to add transitions.");
 	}
@@ -65,15 +65,22 @@ public class AnimationCommand extends BaseCommand {
 
 	@Subcommand("list|info|listtransitions|transitions")
 	@CommandPermission("schematics.animation.create")
+	@Default
 	public void listTransitions(Player player) {
 		persistence.getAnimation(player.getUniqueId()).ifPresentOrElse(animation -> {
 			// Show animation id
 			player.sendMessage(ChatColor.GREEN + "Animation Id: "
 					+ animation.getId().orElse(ChatColor.YELLOW + "[Not Set]"));
 
+			int index = 1;
 			// List transitions
 			for (Transition transition : animation.getAllTransitions()) {
 				StringBuilder builder = new StringBuilder("    ");
+				builder.append(ChatColor.GRAY);
+				builder.append("(");
+				builder.append(index++);
+				builder.append(") ");
+
 				if (transition.hasTimeBefore()) {
 					builder.append(ChatColor.DARK_AQUA);
 					builder.append(formatMillisecondsAsSeconds(transition.getMillisecondsBefore()));
@@ -118,6 +125,7 @@ public class AnimationCommand extends BaseCommand {
 			try {
 				Transition transition = transitionIntent.createTransition(player, args);
 				persistence.addTransition(player.getUniqueId(), transition);
+				player.sendMessage(ChatColor.GREEN + "Added a " + transitionId + " transition.");
 			} catch (IllegalArgumentException e) {
 				player.sendMessage(ChatColor.RED + e.getMessage());
 			}
@@ -139,7 +147,7 @@ public class AnimationCommand extends BaseCommand {
 			animationStorage.addAnimation(animation);
 			try {
 				animationStorage.saveAll(plugin, true);
-				player.sendMessage(ChatColor.RED + "Saved animation with id " + animation.getId().orElseThrow());
+				player.sendMessage(ChatColor.GREEN + "Saved animation with id " + animation.getId().orElseThrow());
 			} catch (IOException e) {
 				e.printStackTrace();
 				player.sendMessage(

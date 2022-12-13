@@ -1,17 +1,25 @@
 package net.harieo.schematics.paper.command.transition;
 
 import net.harieo.schematics.animation.impl.basic.SchematicTransition;
+import net.harieo.schematics.animation.impl.serializable.SerializableSchematicTransition;
+import net.harieo.schematics.paper.position.BukkitCoordinate;
+import net.harieo.schematics.paper.position.BukkitJsonCoordinateBlueprint.BukkitJsonCoordinateSerializer;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
 import net.harieo.schematics.schematic.Schematic;
 import org.bukkit.entity.Player;
+
+import net.harieo.schematics.serialization.impl.schematic.SchematicJsonSerializer;
 import org.jetbrains.annotations.NotNull;
 
 public class SchematicTransitionIntent extends TransitionIntent<SchematicTransition> {
 
     private final SchematicStorage schematicStorage;
+    private final SchematicJsonSerializer<BukkitCoordinate> schematicJsonSerializer;
 
-    public SchematicTransitionIntent(@NotNull SchematicStorage schematicStorage) {
+    public SchematicTransitionIntent(@NotNull SchematicStorage schematicStorage,
+            @NotNull BukkitJsonCoordinateSerializer bukkitJsonCoordinateSerializer) {
         this.schematicStorage = schematicStorage;
+        this.schematicJsonSerializer = new SchematicJsonSerializer<>(bukkitJsonCoordinateSerializer);
     }
 
     @Override
@@ -30,7 +38,8 @@ public class SchematicTransitionIntent extends TransitionIntent<SchematicTransit
                 .orElseThrow(() -> new IllegalArgumentException("No schematic exists with id: " + schematicId));
 
         MillisecondData millisecondData = parseMillisecondData(arguments, 1);
-        return new SchematicTransition(schematic, millisecondData.millisecondsBefore(), millisecondData.millisecondsAfter());
+        return new SerializableSchematicTransition<>(schematic, schematicJsonSerializer,
+                millisecondData.millisecondsBefore(), millisecondData.millisecondsAfter());
     }
 
 }

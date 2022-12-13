@@ -31,16 +31,6 @@ public abstract class Transition implements Runnable {
     }
 
     /**
-     * An overload of {@link #Transition(String, long, long)} where the id is null.
-     *
-     * @param millisecondsBefore the milliseconds before this transition should run
-     * @param millisecondsAfter the milliseconds before the next transition should run proceeding this one
-     */
-    public Transition(long millisecondsBefore, long millisecondsAfter) {
-        this(null, millisecondsBefore, millisecondsAfter);
-    }
-
-    /**
      * @return the id, if one has been provided
      */
     public Optional<String> getId() {

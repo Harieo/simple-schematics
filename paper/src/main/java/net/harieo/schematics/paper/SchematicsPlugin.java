@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import net.harieo.schematics.paper.animation.AnimationStorage;
 import net.harieo.schematics.paper.animation.TickingAnimationDeserializer;
 import net.harieo.schematics.paper.command.CommandPosition;
+import net.harieo.schematics.paper.command.animation.AnimationCommand;
 import net.harieo.schematics.paper.command.schematic.SchematicCommand;
 import net.harieo.schematics.paper.command.transition.TransitionIntentRegistry;
 import net.harieo.schematics.paper.schematic.SchematicStorage;
@@ -64,6 +65,7 @@ public class SchematicsPlugin extends JavaPlugin {
 
         SchematicCommand schematicCommand = new SchematicCommand(this);
         commandManager.registerCommand(schematicCommand);
+        commandManager.registerCommand(new AnimationCommand(this));
 
         Bukkit.getPluginManager().registerEvents(new SchematicToolListener(schematicToolConfiguration,
                 schematicCommand.getPersistence()), this);

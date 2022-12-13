@@ -15,7 +15,7 @@ public class EmptyTransition extends Transition {
      * @param millisecondsAfter  the milliseconds before the next transition should run proceeding this one
      */
     public EmptyTransition(long millisecondsBefore, long millisecondsAfter) {
-        super(millisecondsBefore, millisecondsAfter);
+        super("empty", millisecondsBefore, millisecondsAfter);
     }
 
     @Override
